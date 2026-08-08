@@ -3,22 +3,100 @@
   'use strict';
 
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var canHover = window.matchMedia('(hover:hover)').matches;
 
-  /* ---- Année du copyright ---- */
+  /* ---- Année ---- */
   var year = document.getElementById('year');
   if (year) year.textContent = new Date().getFullYear();
 
-  /* ---- Barre de nav : fond de verre au scroll + bouton WhatsApp flottant ---- */
+  /* ---- Nav, barre de progression, bouton flottant ---- */
   var nav = document.getElementById('nav');
   var fab = document.querySelector('.fab');
+  var bar = document.getElementById('progressbar');
+  var ticking = false;
 
-  function onScroll() {
+  function frame() {
     var y = window.scrollY || window.pageYOffset;
+    var max = document.documentElement.scrollHeight - window.innerHeight;
     if (nav) nav.classList.toggle('is-stuck', y > 12);
-    if (fab) fab.classList.toggle('is-on', y > 640);
+    if (fab) fab.classList.toggle('is-on', y > 620);
+    if (bar) bar.style.width = (max > 0 ? (y / max) * 100 : 0) + '%';
+    ticking = false;
   }
-  onScroll();
+  function onScroll() {
+    if (ticking) return;
+    ticking = true;
+    window.requestAnimationFrame(frame);
+  }
+  frame();
   window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll, { passive: true });
+
+  /* ---- Halo de verre qui suit le curseur ---- */
+  if (canHover && !reduced) {
+    document.querySelectorAll('.glass').forEach(function (el) {
+      el.addEventListener('pointermove', function (e) {
+        var r = el.getBoundingClientRect();
+        el.style.setProperty('--mx', ((e.clientX - r.left) / r.width) * 100 + '%');
+        el.style.setProperty('--my', ((e.clientY - r.top) / r.height) * 100 + '%');
+      });
+    });
+  }
+
+  /* ---- Fiches modèles : déploiement au clic (et au survol via le CSS) ---- */
+  document.querySelectorAll('[data-card]').forEach(function (card) {
+    var toggle = card.querySelector('.mcard__toggle');
+    if (!toggle) return;
+    toggle.addEventListener('click', function () {
+      var open = card.classList.toggle('is-open');
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      toggle.querySelector('span').textContent = open ? 'Masquer' : 'Caractéristiques';
+    });
+  });
+
+  /* ---- Apparition au scroll ---- */
+  var targets = document.querySelectorAll(
+    '.hero__copy > *, .hero__visual, .perk, .shead, .mcard, .stagecard, .uv, .step, .plan, .plans__note, .law, .qa, .cta'
+  );
+
+  if (reduced || !('IntersectionObserver' in window)) {
+    targets.forEach(function (el) { el.classList.add('in'); });
+  } else {
+    targets.forEach(function (el) { el.classList.add('reveal'); });
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        var el = entry.target;
+        var i = el.parentElement ? Array.prototype.indexOf.call(el.parentElement.children, el) : 0;
+        el.style.transitionDelay = Math.min(i, 5) * 75 + 'ms';
+        el.classList.add('in');
+        io.unobserve(el);
+      });
+    }, { rootMargin: '0px 0px -10% 0px', threshold: 0.1 });
+    targets.forEach(function (el) { io.observe(el); });
+  }
+
+  /* ---- Compteur sur les prix ---- */
+  var nums = document.querySelectorAll('[data-count]');
+  if (nums.length && !reduced && 'IntersectionObserver' in window) {
+    var counter = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        var el = entry.target;
+        var end = parseInt(el.getAttribute('data-count'), 10) || 0;
+        var start = performance.now();
+        var dur = 900;
+        (function tick(now) {
+          var p = Math.min((now - start) / dur, 1);
+          var eased = 1 - Math.pow(1 - p, 3);
+          el.textContent = Math.round(end * eased);
+          if (p < 1) requestAnimationFrame(tick);
+        })(start);
+        counter.unobserve(el);
+      });
+    }, { threshold: 0.6 });
+    nums.forEach(function (el) { counter.observe(el); });
+  }
 
   /* ---- Menu mobile ---- */
   var burger = document.getElementById('burger');
@@ -33,8 +111,7 @@
 
   if (burger && menu) {
     burger.addEventListener('click', function () {
-      var open = burger.getAttribute('aria-expanded') === 'true';
-      if (open) {
+      if (burger.getAttribute('aria-expanded') === 'true') {
         closeMenu();
       } else {
         menu.hidden = false;
@@ -49,44 +126,20 @@
       if (e.key === 'Escape') closeMenu();
     });
     window.addEventListener('resize', function () {
-      if (window.innerWidth > 1080) closeMenu();
+      if (window.innerWidth > 1120) closeMenu();
     });
   }
 
-  /* ---- Apparition progressive au scroll ---- */
-  var targets = document.querySelectorAll(
-    '.reveal, .shead, .switch__card, .model, .stagecard, .uv, .step, .plan, .law, .qa, .cta'
-  );
-
-  if (reduced || !('IntersectionObserver' in window)) {
-    targets.forEach(function (el) { el.classList.add('in'); });
-  } else {
-    targets.forEach(function (el) { el.classList.add('reveal'); });
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (!entry.isIntersecting) return;
-        var el = entry.target;
-        var group = el.parentElement ? Array.prototype.indexOf.call(el.parentElement.children, el) : 0;
-        el.style.transitionDelay = Math.min(group, 4) * 70 + 'ms';
-        el.classList.add('in');
-        io.unobserve(el);
-      });
-    }, { rootMargin: '0px 0px -12% 0px', threshold: 0.12 });
-    targets.forEach(function (el) { io.observe(el); });
-  }
-
-  /* ---- FAQ : une seule réponse ouverte à la fois ---- */
+  /* ---- FAQ : une seule réponse ouverte ---- */
   var qas = document.querySelectorAll('.qa');
   qas.forEach(function (qa) {
     qa.addEventListener('toggle', function () {
       if (!qa.open) return;
-      qas.forEach(function (other) {
-        if (other !== qa) other.open = false;
-      });
+      qas.forEach(function (other) { if (other !== qa) other.open = false; });
     });
   });
 
-  /* ---- Ancres : compense la hauteur de la nav collante ---- */
+  /* ---- Ancres : compense la nav collante ---- */
   document.querySelectorAll('a[href^="#"]').forEach(function (a) {
     a.addEventListener('click', function (e) {
       var id = a.getAttribute('href');
@@ -94,8 +147,7 @@
       var target = document.querySelector(id);
       if (!target) return;
       e.preventDefault();
-      var offset = (nav ? nav.offsetHeight : 0) + 12;
-      var top = target.getBoundingClientRect().top + window.pageYOffset - offset;
+      var top = target.getBoundingClientRect().top + window.pageYOffset - ((nav ? nav.offsetHeight : 0) + 14);
       window.scrollTo({ top: top, behavior: reduced ? 'auto' : 'smooth' });
       history.replaceState(null, '', id);
     });

@@ -36,8 +36,8 @@ Même adresse que ci-dessus.
 
 ### Les tarifs
 
-Ils sont écrits en clair dans `index.html`, section `<!-- TARIFS -->` : cherche `50 €` et `70 €`.
-Pense à changer aussi la ligne du hero « Dès 50 € » si tu modifies le prix bas.
+Ils sont écrits en clair dans `index.html`, section `<!-- TARIFS -->` : cherche `data-count="50"` et `data-count="70"`.
+Change le chiffre **à deux endroits** sur la ligne (dans `data-count` et dans le texte), et pense aussi au bloc `50 €` des indicateurs du hero.
 
 ---
 
@@ -114,6 +114,7 @@ Pour remplacer une photo : prends-la contre un mur clair, garde exactement le m�
 ## 4. Points à vérifier avant de communiquer dessus
 
 - Les tarifs affichés : **50 € TTC/mois** (comptoir, 1 à 5 personnes, 2 entretiens/an) et **70 € TTC/mois** (colonne, 6 personnes et plus, 4 entretiens/an).
+- Les fiches modèles se déplient au survol sur ordinateur, et au clic sur le bouton « Caractéristiques » sur mobile.
 - Aucune certification n'est revendiquée sur le site (pas d'ACS, pas de NSF). C'est volontaire : tant que tu ne l'as pas, il ne faut rien afficher.
 - Le numéro WhatsApp utilisé partout est le **+590 690 34 24 76**. Il apparaît dans `index.html` sous la forme `590690342476` dans les liens `wa.me`.
 - La page Facebook liée est `facebook.com/unikeau`.
