@@ -3,13 +3,11 @@
   'use strict';
 
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var canHover = window.matchMedia('(hover:hover)').matches;
 
-  /* ---- Année ---- */
   var year = document.getElementById('year');
   if (year) year.textContent = new Date().getFullYear();
 
-  /* ---- Nav, barre de progression, bouton flottant ---- */
+  /* ---- Nav, progression, bouton flottant ---- */
   var nav = document.getElementById('nav');
   var fab = document.querySelector('.fab');
   var bar = document.getElementById('progressbar');
@@ -18,8 +16,8 @@
   function frame() {
     var y = window.scrollY || window.pageYOffset;
     var max = document.documentElement.scrollHeight - window.innerHeight;
-    if (nav) nav.classList.toggle('is-stuck', y > 12);
-    if (fab) fab.classList.toggle('is-on', y > 620);
+    if (nav) nav.classList.toggle('is-stuck', y > 10);
+    if (fab) fab.classList.toggle('is-on', y > 600);
     if (bar) bar.style.width = (max > 0 ? (y / max) * 100 : 0) + '%';
     ticking = false;
   }
@@ -32,18 +30,7 @@
   window.addEventListener('scroll', onScroll, { passive: true });
   window.addEventListener('resize', onScroll, { passive: true });
 
-  /* ---- Halo de verre qui suit le curseur ---- */
-  if (canHover && !reduced) {
-    document.querySelectorAll('.glass').forEach(function (el) {
-      el.addEventListener('pointermove', function (e) {
-        var r = el.getBoundingClientRect();
-        el.style.setProperty('--mx', ((e.clientX - r.left) / r.width) * 100 + '%');
-        el.style.setProperty('--my', ((e.clientY - r.top) / r.height) * 100 + '%');
-      });
-    });
-  }
-
-  /* ---- Fiches modèles : déploiement au clic (et au survol via le CSS) ---- */
+  /* ---- Fiches modèles ---- */
   document.querySelectorAll('[data-card]').forEach(function (card) {
     var toggle = card.querySelector('.mcard__toggle');
     if (!toggle) return;
@@ -56,7 +43,7 @@
 
   /* ---- Apparition au scroll ---- */
   var targets = document.querySelectorAll(
-    '.hero__copy > *, .hero__visual, .perk, .shead, .mcard, .stagecard, .uv, .step, .plan, .plans__note, .law, .qa, .cta'
+    '.hero__copy > *, .hero__visual, .perk, .shead, .mcard, .stage, .uv, .step, .plan, .plans__note, .law, .qa, .cta'
   );
 
   if (reduced || !('IntersectionObserver' in window)) {
@@ -68,7 +55,7 @@
         if (!entry.isIntersecting) return;
         var el = entry.target;
         var i = el.parentElement ? Array.prototype.indexOf.call(el.parentElement.children, el) : 0;
-        el.style.transitionDelay = Math.min(i, 5) * 75 + 'ms';
+        el.style.transitionDelay = Math.min(i, 5) * 70 + 'ms';
         el.classList.add('in');
         io.unobserve(el);
       });
@@ -85,11 +72,9 @@
         var el = entry.target;
         var end = parseInt(el.getAttribute('data-count'), 10) || 0;
         var start = performance.now();
-        var dur = 900;
         (function tick(now) {
-          var p = Math.min((now - start) / dur, 1);
-          var eased = 1 - Math.pow(1 - p, 3);
-          el.textContent = Math.round(end * eased);
+          var p = Math.min((now - start) / 900, 1);
+          el.textContent = Math.round(end * (1 - Math.pow(1 - p, 3)));
           if (p < 1) requestAnimationFrame(tick);
         })(start);
         counter.unobserve(el);
@@ -126,7 +111,7 @@
       if (e.key === 'Escape') closeMenu();
     });
     window.addEventListener('resize', function () {
-      if (window.innerWidth > 1120) closeMenu();
+      if (window.innerWidth > 1100) closeMenu();
     });
   }
 
@@ -139,7 +124,7 @@
     });
   });
 
-  /* ---- Ancres : compense la nav collante ---- */
+  /* ---- Ancres ---- */
   document.querySelectorAll('a[href^="#"]').forEach(function (a) {
     a.addEventListener('click', function (e) {
       var id = a.getAttribute('href');
