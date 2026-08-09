@@ -1,5 +1,9 @@
 # Site UNIK'EAU — fontaine-guadeloupe.fr
 
+> **Charte graphique** : ouvre `charte.html` dans un navigateur (ou `fontaine-guadeloupe.fr/charte.html` une fois en ligne).
+> Elle documente la palette « Sable & Lagon », les polices, les composants et les règles d'usage.
+> Toutes les couleurs sont définies en haut de `styles.css`, dans le bloc `:root` — change une valeur là, elle change partout.
+
 Site vitrine one-page. Que du HTML / CSS / JS, aucun outil à installer, aucune commande à taper.
 
 ---
@@ -99,6 +103,7 @@ Vercel redéploie tout seul en une minute. Rien d'autre à faire.
 | `styles.css` | Les couleurs, les polices, la mise en page |
 | `script.js` | Le menu mobile, les animations, la FAQ |
 | `assets/` | Logo, photos détourées, icônes, fiche technique PDF, image de partage |
+| `charte.html` | La charte graphique, consultable dans le navigateur |
 | `robots.txt`, `sitemap.xml` | Pour Google |
 | `vercel.json` | Réglages du serveur (cache, sécurité) |
 
