@@ -119,7 +119,7 @@
 
   /* ---- Apparition au scroll ---- */
   var targets = document.querySelectorAll(
-    '.hero__copy > *, .hero__visual, .shead, .cpanel, .compare__arrow, .mcard, .lab, .step, .plan, .plans__note, .law, .qa, .cta'
+    '.hero__copy > *, .hero__visual, .shead, .cpanel, .compare__arrow, .mcard, .lab, .realstrip, .step, .plan, .plans__note, .law, .qa, .cta'
   );
   if (reduced || !('IntersectionObserver' in window)) {
     targets.forEach(function (el) { el.classList.add('in'); });

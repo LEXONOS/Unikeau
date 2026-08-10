@@ -330,6 +330,13 @@ p{margin:0}
 .lstep__inner p{margin:0;font-size:.9rem;color:rgba(206,227,245,.8);max-width:58ch}
 .lstep__spec{margin-top:13px;display:inline-flex;font-family:var(--data);font-size:.6rem;letter-spacing:.06em;color:#eaf6ff;background:color-mix(in srgb,var(--c) 14%,transparent);border:1px solid color-mix(in srgb,var(--c) 35%,transparent);padding:6px 12px;border-radius:var(--r-pill)}
 
+/* Bandeau « en vrai » : photo intérieure sous la 3D */
+.realstrip{display:grid;grid-template-columns:auto 1fr;gap:clamp(22px,3vw,46px);align-items:center;max-width:1120px;margin:clamp(20px,3vw,36px) auto 0;padding:clamp(18px,2.4vw,28px);border-radius:var(--r-xl);background:rgba(255,255,255,.04);border:1px solid rgba(150,205,240,.14)}
+.realstrip__ph{flex:none;border-radius:var(--r-lg);overflow:hidden;background:linear-gradient(180deg,#0C355F,#07213C);border:1px solid rgba(150,205,240,.16);box-shadow:0 22px 46px -22px rgba(0,0,0,.7)}
+.realstrip__ph img{display:block;width:clamp(150px,20vw,210px);height:auto}
+.realstrip__cap h3{color:#fff;margin:4px 0 11px}
+.realstrip__cap p:last-child{color:rgba(206,227,245,.78);font-size:.95rem;max-width:58ch;margin:0}
+
 /* ======================================================== ÉTAPES ======= */
 .steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(12px,1.6vw,20px)}
 .step{background:var(--blanc);border:1px solid var(--trait);border-radius:var(--r-lg);padding:clamp(22px,2.4vw,28px);box-shadow:var(--sh-1);transition:transform .3s var(--ease),box-shadow .3s}
@@ -448,6 +455,9 @@ p{margin:0}
   .plans{grid-template-columns:1fr}
   .plan--featured{margin-top:14px}
   .cta__coords{grid-template-columns:1fr}
+  .realstrip{grid-template-columns:1fr;gap:16px}
+  .realstrip__ph{margin-inline:auto}
+  .realstrip__ph img{width:min(60vw,220px)}
   .footer__inner{grid-template-columns:1fr}
   .specs div{grid-template-columns:1fr;gap:2px}
   .btn--lg{width:100%}
