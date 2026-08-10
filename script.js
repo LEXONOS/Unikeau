@@ -30,6 +30,43 @@
   window.addEventListener('scroll', onScroll, { passive: true });
   window.addEventListener('resize', onScroll, { passive: true });
 
+
+  /* ---- Hauteur du heros : la landing remplit l'ecran, bandeau compris ---- */
+  var marquee = document.querySelector('.marquee');
+  function sizeHero() {
+    var h = window.innerHeight - (nav ? nav.offsetHeight : 0) - (marquee ? marquee.offsetHeight : 0);
+    document.documentElement.style.setProperty('--heroh', Math.max(h, 520) + 'px');
+  }
+  sizeHero();
+  window.addEventListener('resize', sizeHero, { passive: true });
+  window.addEventListener('load', sizeHero);
+
+  /* ---- Filtration : l'eau progresse au scroll ---- */
+  var flow = document.getElementById('flow');
+  var flowfill = document.getElementById('flowfill');
+  var stages = document.querySelectorAll('.fstage');
+  var nodes = document.querySelectorAll('.flow__node');
+
+  function flowFrame() {
+    if (!flow || !flowfill) return;
+    var r = flow.getBoundingClientRect();
+    var p = (window.innerHeight * 0.62 - r.top) / r.height;
+    flowfill.style.height = Math.max(0, Math.min(1, p)) * 100 + '%';
+  }
+  flowFrame();
+  window.addEventListener('scroll', flowFrame, { passive: true });
+
+  if ('IntersectionObserver' in window && stages.length) {
+    var fio = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        var idx = parseInt(entry.target.getAttribute('data-stage'), 10);
+        entry.target.classList.toggle('is-live', entry.isIntersecting);
+        if (nodes[idx]) nodes[idx].classList.toggle('is-live', entry.isIntersecting);
+      });
+    }, { rootMargin: '-36% 0px -36% 0px' });
+    stages.forEach(function (s) { fio.observe(s); });
+  }
+
   /* ---- Fiches modèles ---- */
   document.querySelectorAll('[data-card]').forEach(function (card) {
     var toggle = card.querySelector('.mcard__toggle');
@@ -43,7 +80,7 @@
 
   /* ---- Apparition au scroll ---- */
   var targets = document.querySelectorAll(
-    '.hero__copy > *, .hero__visual, .perk, .shead, .mcard, .stage, .uv, .step, .plan, .plans__note, .law, .qa, .cta'
+    '.hero__copy > *, .hero__visual, .perk, .shead, .mcard, .fstage, .step, .plan, .plans__note, .law, .qa, .cta'
   );
 
   if (reduced || !('IntersectionObserver' in window)) {

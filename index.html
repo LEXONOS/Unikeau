@@ -103,9 +103,9 @@
   <div class="wrap hero__grid">
 
     <div class="hero__copy">
-      <p class="pill"><i class="dot"></i>Fontaine sur réseau · Guadeloupe</p>
-      <h1>L'eau filtrée,<br><em>en illimité.</em></h1>
-      <p class="lead">Branchée sur votre arrivée d'eau. Sans bonbonne, sans stock, sans livraison.</p>
+      <p class="pill"><i class="dot"></i>Toute la Guadeloupe &middot; Pros &amp; particuliers</p>
+      <h1>La fontaine à eau,<br><em>branchée sur votre réseau.</em></h1>
+      <p class="lead">Raccordée sur votre arrivée d'eau, en entreprise comme à la maison. Pas de bonbonnes à stocker, pas de livraison à attendre : l'eau est filtrée sur place, en illimité, et nous venons faire l'entretien, compris dans votre forfait.</p>
 
       <div class="hero__cta">
         <a class="btn btn--primary btn--lg" href="https://wa.me/590690342476?text=Bonjour%20UNIK'EAU%2C%20je%20souhaite%20un%20devis%20pour%20une%20fontaine%20%C3%A0%20eau." target="_blank" rel="noopener">
@@ -116,18 +116,23 @@
       </div>
 
       <ul class="kpi">
-        <li><strong>Dès 50 €</strong><span>TTC par mois</span></li>
+        <li><strong>Dès 50 &euro;</strong><span>TTC / mois, entretien compris</span></li>
         <li><strong>4 + UV</strong><span>étapes de filtration</span></li>
-        <li><strong>0</strong><span>bonbonne à porter</span></li>
+        <li><strong>0</strong><span>bonbonne à stocker</span></li>
       </ul>
     </div>
 
     <div class="hero__visual">
-      <div class="showcase">
-        <span class="showcase__disc" aria-hidden="true"></span>
-        <img class="showcase__product" src="assets/fontaine-grande.webp" alt="Fontaine à eau UNIK'EAU sur pied" width="529" height="1216" fetchpriority="high" decoding="async">
-        <span class="badge badge--a"><i></i>Chaude · Tempérée · Froide</span>
-        <span class="badge badge--b"><i></i>Lampe UV intégrée</span>
+      <div class="stagepanel">
+        <img class="stagepanel__product" src="assets/fontaine-grande.webp" alt="Fontaine à eau UNIK'EAU sur pied, raccordée au réseau" width="529" height="1216" fetchpriority="high" decoding="async">
+        <span class="stagepanel__floor" aria-hidden="true"></span>
+        <span class="chip chip--a"><i></i>Chaude · Tempérée · Froide</span>
+        <span class="chip chip--b"><i></i>Lampe UV intégrée</span>
+        <span class="chip chip--c"><i></i>Entretien compris</span>
+      </div>
+      <div class="dstack" aria-hidden="true">
+        <figure class="dcard dcard--taps"><figcaption>3 sorties d'eau</figcaption></figure>
+        <figure class="dcard dcard--counter"><figcaption>Modèle comptoir</figcaption></figure>
       </div>
     </div>
 
@@ -202,7 +207,7 @@
                 <div><dt>Personnes</dt><dd>1 à 5</dd></div>
                 <div><dt>Entretien</dt><dd>2 passages par an, un tous les 6 mois</dd></div>
                 <div><dt>Eau</dt><dd>Chaude et froide</dd></div>
-                <div><dt>Filtration</dt><dd>Cartouches remplacées à chaque passage</dd></div>
+                <div><dt>Filtration</dt><dd>4 étapes : PP + GAC + UF + T33</dd></div>
                 <div><dt>Désinfection</dt><dd>—</dd></div>
                 <div><dt>Alimentation</dt><dd>Raccordée au réseau d'eau</dd></div>
                 <div><dt>Format</dt><dd>Pose sur plan de travail</dd></div>
@@ -265,25 +270,77 @@
 <section class="section section--dark" id="filtration">
   <div class="wrap">
     <header class="shead">
-      <p class="eyebrow">Le parcours de l'eau</p>
-      <h2>Quatre étages, puis la lumière.</h2>
-      <p class="shead__lead">Chaque cartouche retire quelque chose de précis. C'est ce que nous remplaçons à chaque passage.</p>
+      <p class="eyebrow">Filtration · identique sur les deux modèles</p>
+      <h2>4 cartouches et une lampe UV<br>travaillent pour vous.</h2>
+      <p class="shead__lead">L'eau du réseau traverse quatre cartouches, dans cet ordre, avant d'arriver au robinet. Nous les remplaçons à chaque entretien, compris dans votre forfait.</p>
     </header>
 
-    <div class="rail">
-      <div class="rail__line" aria-hidden="true"><span class="rail__pulse"></span></div>
-      <article class="stage"><p class="stage__id">01</p><h3>PP</h3><p class="stage__name">Sédiments</p><p class="stage__txt">Sable, rouille, particules.</p></article>
-      <article class="stage"><p class="stage__id">02</p><h3>GAC</h3><p class="stage__name">Charbon actif</p><p class="stage__txt">Chlore, odeurs, mauvais goût.</p></article>
-      <article class="stage"><p class="stage__id">03</p><h3>UF</h3><p class="stage__name">Ultrafiltration</p><p class="stage__txt">Bactéries et impuretés fines.</p></article>
-      <article class="stage"><p class="stage__id">04</p><h3>T33</h3><p class="stage__name">Affinage</p><p class="stage__txt">Le goût, juste avant la sortie.</p></article>
-    </div>
+    <div class="flow" id="flow">
+      <div class="flow__stick">
+        <div class="flow__machine">
+          <img src="assets/fontaine-grande-2.webp" alt="" aria-hidden="true" width="461" height="1016" loading="lazy" decoding="async">
+        </div>
+        <div class="flow__line" aria-hidden="true">
+          <span class="flow__fill" id="flowfill"></span>
+          <i class="flow__node" data-node="0"></i>
+          <i class="flow__node" data-node="1"></i>
+          <i class="flow__node" data-node="2"></i>
+          <i class="flow__node" data-node="3"></i>
+          <i class="flow__node" data-node="4"></i>
+        </div>
+        <p class="flow__legend">Le trajet de l'eau<br>dans la machine</p>
+      </div>
 
-    <div class="uv">
-      <div class="uv__tube" aria-hidden="true"><span></span></div>
-      <div class="uv__text">
-        <p class="eyebrow">Sur la colonne</p>
-        <h3>Une lampe UV, en continu</h3>
-        <p>Elle neutralise les micro-organismes qui passeraient les cartouches. Aucun produit ajouté.</p>
+      <div class="flow__stages">
+        <article class="fstage" data-stage="0">
+          <figure class="cart"><img src="assets/cartouche-pp.webp" alt="Cartouche PP" width="104" height="250" loading="lazy" decoding="async"></figure>
+          <div class="fstage__body">
+            <p class="fstage__step">Cartouche 1 · Pré-filtration</p>
+            <h3>PP &mdash; Sédiments</h3>
+            <p class="fstage__txt">Une fibre de polypropylène bobinée qui arrête tout ce qui se voit : sable, rouille, particules en suspension du réseau. Elle encaisse en premier et protège les trois cartouches suivantes.</p>
+            <p class="fstage__spec">Sable · rouille · particules</p>
+          </div>
+        </article>
+
+        <article class="fstage" data-stage="1">
+          <figure class="cart"><img src="assets/cartouche-gac.webp" alt="Cartouche GAC" width="104" height="250" loading="lazy" decoding="async"></figure>
+          <div class="fstage__body">
+            <p class="fstage__step">Cartouche 2 · Charbon actif</p>
+            <h3>GAC &mdash; Goût et odeurs</h3>
+            <p class="fstage__txt">Des grains de charbon actif absorbent le chlore, les odeurs et les mauvais goûts. C'est ici que l'eau du robinet change vraiment de goût.</p>
+            <p class="fstage__spec">Chlore · odeurs · goûts</p>
+          </div>
+        </article>
+
+        <article class="fstage" data-stage="2">
+          <figure class="cart"><img src="assets/cartouche-uf.webp" alt="Cartouche UF" width="104" height="250" loading="lazy" decoding="async"></figure>
+          <div class="fstage__body">
+            <p class="fstage__step">Cartouche 3 · Ultrafiltration</p>
+            <h3>UF &mdash; Membrane 0,01 micron</h3>
+            <p class="fstage__txt">Une membrane aux pores des milliers de fois plus fins qu'un cheveu. Elle retient les bactéries et les impuretés microscopiques, tout en laissant passer les minéraux de l'eau.</p>
+            <p class="fstage__spec">Bactéries · micro-impuretés</p>
+          </div>
+        </article>
+
+        <article class="fstage" data-stage="3">
+          <figure class="cart"><img src="assets/cartouche-t33.webp" alt="Cartouche T33" width="104" height="250" loading="lazy" decoding="async"></figure>
+          <div class="fstage__body">
+            <p class="fstage__step">Cartouche 4 · Affinage</p>
+            <h3>T33 &mdash; Post-charbon</h3>
+            <p class="fstage__txt">Un dernier lit de charbon polit le goût juste avant la sortie. C'est la touche finale, celle qui rend l'eau vraiment agréable à boire.</p>
+            <p class="fstage__spec">Affinage du goût · dernière étape</p>
+          </div>
+        </article>
+
+        <article class="fstage" data-stage="4">
+          <div class="uvtube" aria-hidden="true"><span></span></div>
+          <div class="fstage__body">
+            <p class="fstage__step">En continu · sur la colonne</p>
+            <h3>Lampe UV &mdash; Désinfection</h3>
+            <p class="fstage__txt">Dans la fontaine colonne, une lampe UV neutralise en continu les micro-organismes qui passeraient les cartouches. Aucun produit ajouté, aucune odeur : juste de la lumière.</p>
+            <p class="fstage__spec">Micro-organismes · zéro produit chimique</p>
+          </div>
+        </article>
       </div>
     </div>
   </div>
@@ -293,30 +350,31 @@
 <section class="section" id="installation">
   <div class="wrap">
     <header class="shead">
-      <p class="eyebrow">Mise en service</p>
-      <h2>Quatre temps, et c'est réglé.</h2>
+      <p class="eyebrow">Comment ça se passe</p>
+      <h2>Vous ouvrez le robinet.<br>On s'occupe de tout le reste.</h2>
+      <p class="shead__lead">Une seule chose est nécessaire chez vous : une arrivée d'eau potable.</p>
     </header>
 
     <ol class="steps">
       <li class="step">
         <p class="step__id">01</p>
-        <h3>Vous envoyez une photo</h3>
-        <p>L'endroit prévu, par WhatsApp. On vous dit quel modèle convient.</p>
+        <h3>Vous nous contactez</h3>
+        <p>Par WhatsApp ou par téléphone. Devis gratuit, réponse le jour même.</p>
       </li>
       <li class="step">
         <p class="step__id">02</p>
-        <h3>On raccorde</h3>
-        <p>Piquage sur l'arrivée d'eau et mise en service, par O'ELEC.</p>
+        <h3>On installe</h3>
+        <p>O'ELEC raccorde la fontaine sur votre arrivée d'eau et la met en service.</p>
       </li>
       <li class="step">
         <p class="step__id">03</p>
-        <h3>Vous buvez</h3>
-        <p>Chaude, tempérée, froide. Sans y penser.</p>
+        <h3>Vous en profitez</h3>
+        <p>Eau chaude, tempérée et froide, en illimité, au bureau comme à la maison.</p>
       </li>
       <li class="step">
         <p class="step__id">04</p>
-        <h3>On revient</h3>
-        <p>Nettoyage, filtres, contrôle. Chaque passage est consigné.</p>
+        <h3>On entretient</h3>
+        <p>Compris dans le forfait : 2 passages par an jusqu'à 5 personnes, 4 au-delà. Nettoyage complet et remplacement des 4 cartouches.</p>
       </li>
     </ol>
   </div>
@@ -328,18 +386,18 @@
     <header class="shead">
       <p class="eyebrow">Tarifs</p>
       <h2>Un forfait, tout compris.</h2>
-      <p class="shead__lead">Fontaine, pose, filtres, déplacements et dépannage sont dans le prix.</p>
+      <p class="shead__lead">Le forfait couvre la location de la fontaine, l'installation, l'entretien et le dépannage. La seule chose à prévoir chez vous : une arrivée d'eau potable.</p>
     </header>
 
     <div class="plans">
       <article class="plan">
         <p class="plan__for">Comptoir · 1 à 5 personnes</p>
         <p class="plan__price"><span class="plan__num" data-count="50">50</span><span class="plan__cur">€</span><span class="plan__unit">TTC / mois</span></p>
-        <p class="plan__maint">2 entretiens par an</p>
+        <p class="plan__maint">2 entretiens par an compris</p>
         <ul class="plan__list">
           <li>Fontaine de comptoir anthracite</li>
           <li>Installation et mise en service</li>
-          <li>Filtres remplacés à chaque passage</li>
+          <li>Les 4 cartouches remplacées à chaque entretien</li>
           <li>Dépannage et remplacement</li>
         </ul>
         <a class="btn btn--soft btn--full" href="https://wa.me/590690342476?text=Bonjour%20UNIK'EAU%2C%20je%20suis%20int%C3%A9ress%C3%A9%20par%20la%20fontaine%20de%20comptoir%20(1%20%C3%A0%205%20personnes)." target="_blank" rel="noopener">Demander ce forfait</a>
@@ -349,18 +407,18 @@
         <span class="plan__badge">Le plus demandé</span>
         <p class="plan__for">Colonne · 6 personnes et plus</p>
         <p class="plan__price"><span class="plan__num" data-count="70">70</span><span class="plan__cur">€</span><span class="plan__unit">TTC / mois</span></p>
-        <p class="plan__maint">4 entretiens par an, un tous les 3 mois</p>
+        <p class="plan__maint">4 entretiens par an compris, un par trimestre</p>
         <ul class="plan__list">
           <li>Colonne grise et noire, UV intégré</li>
           <li>Installation et mise en service</li>
-          <li>Filtration 4 étapes remplacée chaque trimestre</li>
+          <li>Les 4 cartouches remplacées chaque trimestre</li>
           <li>Dépannage et remplacement</li>
         </ul>
         <a class="btn btn--primary btn--full" href="https://wa.me/590690342476?text=Bonjour%20UNIK'EAU%2C%20je%20suis%20int%C3%A9ress%C3%A9%20par%20la%20fontaine%20colonne%20(%C3%A0%20partir%20de%206%20personnes)." target="_blank" rel="noopener">Demander ce forfait</a>
       </article>
     </div>
 
-    <p class="plans__note">Tarifs TTC, hors consommation d'eau. Conditions et durée au contrat, établi au nom de O'ELEC.</p>
+    <p class="plans__note">Tarifs TTC, hors consommation d'eau. Le forfait est une location de matériel avec entretien compris ; contrat établi au nom de O'ELEC.</p>
   </div>
 </section>
 
@@ -370,13 +428,13 @@
     <div class="law">
       <div class="law__head">
         <p class="eyebrow">Obligation employeur</p>
-        <h2>L'eau potable est à votre charge. L'entretien aussi.</h2>
-        <p>Le Code du travail impose de fournir une eau potable et fraîche, et d'entretenir l'installation. C'est la partie que nous reprenons.</p>
+        <h2>L'eau potable au travail, c'est la loi. La fournir, c'est notre travail.</h2>
+        <p>Le Code du travail impose de mettre à disposition de l'eau potable et fraîche, avec une installation entretenue. C'est exactement ce que couvre le forfait : la fontaine, sa pose et son entretien sont compris. Il ne reste rien à organiser de votre côté.</p>
       </div>
       <ul class="law__points">
-        <li><strong>Entretien planifié</strong><span>Nous revenons à date fixe.</span></li>
-        <li><strong>Interventions tracées</strong><span>Date, opérations, filtres remplacés.</span></li>
-        <li><strong>Un seul interlocuteur</strong><span>Pose, entretien et dépannage.</span></li>
+        <li><strong>Entretien compris et planifié</strong><span>Nous venons à date fixe, sans surcoût.</span></li>
+        <li><strong>Interventions tracées</strong><span>Date, opérations, cartouches remplacées.</span></li>
+        <li><strong>Un seul interlocuteur</strong><span>Pose, entretien et dépannage : O'ELEC.</span></li>
       </ul>
     </div>
   </div>
