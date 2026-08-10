@@ -41,11 +41,13 @@
   window.addEventListener('scroll', onScroll, { passive: true });
   window.addEventListener('resize', onScroll, { passive: true });
 
-  /* ---- Filtration 3D : la bonbonne tourne et change à chaque étape ---- */
+  /* ---- Filtration : séquence pilotée par le scroll ---- */
   (function () {
     var lab = document.getElementById('lab');
-    if (!lab) return;
-    var steps = Array.prototype.slice.call(lab.querySelectorAll('.lstep'));
+    var scroller = document.getElementById('labScroll');
+    if (!lab || !scroller) return;
+    var segs = Array.prototype.slice.call(lab.querySelectorAll('.rseg'));
+    var dtls = Array.prototype.slice.call(lab.querySelectorAll('.dtl'));
     var mvs = Array.prototype.slice.call(lab.querySelectorAll('.mv'));
     var uv = lab.querySelector('.uvstage');
     var bar = document.getElementById('labBar');
@@ -53,57 +55,68 @@
     var idxEl = document.getElementById('labIdx');
     var accents = ['#1E86D6', '#E8792B', '#2FA84F', '#D6236B', '#46CDEF'];
     var codes = ['PP', 'GAC', 'UF', 'T33', 'UV'];
-    var idx = 0, timer = null, visible = false, scanT = null;
-    var DELAY = 4200, N = steps.length;
+    var N = segs.length || 5;
+    var idx = -1, scanT = null, ticking = false;
 
-    function paint(i) {
-      idx = i;
-      lab.style.setProperty('--acc', accents[i] || accents[0]);
-      steps.forEach(function (s) {
-        var on = parseInt(s.getAttribute('data-i'), 10) === i;
-        s.classList.toggle('is-active', on);
-        var h = s.querySelector('.lstep__head');
-        if (h) h.setAttribute('aria-expanded', on ? 'true' : 'false');
-      });
-      mvs.forEach(function (m) {
-        m.classList.toggle('is-active', parseInt(m.getAttribute('data-i'), 10) === i);
-      });
-      if (uv) uv.classList.toggle('is-active', i === 4);
-      if (bar) bar.style.width = ((i + 1) / N) * 100 + '%';
-      if (tag) tag.textContent = (i === 4 ? 'SCAN · UV' : 'SCAN · ' + codes[i]);
-      if (idxEl) idxEl.textContent = ('0' + (i + 1)).slice(-2);
-      // effet de scan qui masque le changement
+    function scan() {
       lab.classList.remove('scanning');
       void lab.offsetWidth;
       lab.classList.add('scanning');
       clearTimeout(scanT);
       scanT = setTimeout(function () { lab.classList.remove('scanning'); }, 650);
     }
-    function advance() { paint((idx + 1) % N); }
-    function play() { if (timer || reduced || !visible) return; timer = setInterval(advance, DELAY); }
-    function stop() { if (timer) { clearInterval(timer); timer = null; } }
-    function restart() { stop(); play(); }
+    function paint(i, doScan) {
+      if (i === idx) return;
+      idx = i;
+      lab.style.setProperty('--acc', accents[i] || accents[0]);
+      segs.forEach(function (s) { s.classList.toggle('is-active', parseInt(s.getAttribute('data-i'), 10) === i); });
+      dtls.forEach(function (d) { d.classList.toggle('is-active', parseInt(d.getAttribute('data-i'), 10) === i); });
+      mvs.forEach(function (m) { m.classList.toggle('is-active', parseInt(m.getAttribute('data-i'), 10) === i); });
+      if (uv) uv.classList.toggle('is-active', i === 4);
+      if (tag) tag.textContent = 'SCAN · ' + codes[i];
+      if (idxEl) idxEl.textContent = ('0' + (i + 1)).slice(-2);
+      if (doScan) scan();
+    }
 
-    steps.forEach(function (s) {
-      var h = s.querySelector('.lstep__head');
-      if (h) h.addEventListener('click', function () { paint(parseInt(s.getAttribute('data-i'), 10)); restart(); });
+    // Étapes cliquables : sauter à la position de scroll correspondante
+    segs.forEach(function (s) {
+      var btn = s.querySelector('button');
+      if (!btn) return;
+      btn.addEventListener('click', function () {
+        var i = parseInt(s.getAttribute('data-i'), 10);
+        if (scroller.classList.contains('is-scrolly')) {
+          var total = scroller.offsetHeight - window.innerHeight;
+          var target = scroller.offsetTop + total * ((i + 0.5) / N);
+          window.scrollTo({ top: target, behavior: reduced ? 'auto' : 'smooth' });
+        } else {
+          paint(i, true);
+          if (bar) bar.style.width = ((i + 1) / N) * 100 + '%';
+        }
+      });
     });
-    // pause quand on manipule la 3D ou survole
-    lab.addEventListener('mouseenter', stop);
-    lab.addEventListener('mouseleave', play);
-    mvs.forEach(function (m) {
-      m.addEventListener('pointerdown', stop);
-      m.addEventListener('pointerup', function () { restart(); });
-    });
 
-    if ('IntersectionObserver' in window) {
-      new IntersectionObserver(function (entries) {
-        entries.forEach(function (e) { visible = e.isIntersecting; if (visible) play(); else stop(); });
-      }, { threshold: 0.3 }).observe(lab);
-    } else { visible = true; play(); }
-    document.addEventListener('visibilitychange', function () { if (document.hidden) stop(); else play(); });
+    // Mode replié (mouvement réduit / pas de scrollytelling) : première étape figée
+    if (reduced) { paint(0, false); if (bar) bar.style.width = (100 / N) + '%'; return; }
 
-    paint(0);
+    scroller.classList.add('is-scrolly');
+
+    function frame() {
+      var rect = scroller.getBoundingClientRect();
+      var total = scroller.offsetHeight - window.innerHeight;
+      var p = total > 0 ? (-rect.top) / total : 0;
+      p = p < 0 ? 0 : (p > 1 ? 1 : p);
+      if (bar) bar.style.width = (p * 100) + '%';
+      var i = Math.floor(p * N);
+      if (i > N - 1) i = N - 1;
+      if (i < 0) i = 0;
+      paint(i, true);
+      ticking = false;
+    }
+    function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(frame); } }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+    paint(0, false);
+    frame();
   })();
 
   /* ---- Fiches modèles ---- */
@@ -119,7 +132,7 @@
 
   /* ---- Apparition au scroll ---- */
   var targets = document.querySelectorAll(
-    '.hero__copy > *, .hero__visual, .shead, .cpanel, .compare__arrow, .mcard, .lab, .realstrip, .step, .plan, .plans__note, .law, .qa, .cta'
+    '.hero__copy > *, .hero__visual, .shead, .cpanel, .compare__arrow, .mcard, .realstrip, .step, .plan, .plans__note, .law, .qa, .cta'
   );
   if (reduced || !('IntersectionObserver' in window)) {
     targets.forEach(function (el) { el.classList.add('in'); });

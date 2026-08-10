@@ -45,11 +45,11 @@
 }
 
 *,*::before,*::after{box-sizing:border-box}
-html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;overflow-x:hidden}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;overflow-x:clip}
 body{
   margin:0;background:var(--sable);color:var(--encre);
   font-family:var(--texte);font-size:clamp(15.5px,.45vw + 14.6px,17px);line-height:1.6;
-  overflow-x:hidden;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+  overflow-x:clip;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
 }
 img{max-width:100%;height:auto;display:block}
 a{color:inherit}
@@ -252,7 +252,13 @@ p{margin:0}
 .mcard__note{margin-top:14px;font-size:.8rem;color:var(--encre-3)}
 
 /* ==================================================== FILTRATION ======= */
-.section--dark{background:linear-gradient(180deg,var(--abysse),var(--abysse-2));color:#D9E6F1;overflow:hidden}
+.section--dark{background:linear-gradient(180deg,var(--abysse),var(--abysse-2));color:#D9E6F1}
+/* Séquence scrollée : le bloc se fige, on avance dans les étapes au scroll */
+.labscroll{position:relative;height:auto}
+.labscroll.is-scrolly{height:360vh}
+.labsticky{position:relative}
+.labscroll.is-scrolly .labsticky{position:sticky;top:0;height:100vh;display:grid;align-items:center}
+.labscroll.is-scrolly .labsticky > .wrap{width:100%}
 .section--dark .wrap{position:relative;z-index:2}
 .section--dark h2,.section--dark h3{color:#fff}
 .section--dark .eyebrow{color:var(--lagon)}
@@ -262,7 +268,7 @@ p{margin:0}
 .lab{display:grid;grid-template-columns:1.12fr .88fr;gap:clamp(20px,3vw,44px);align-items:stretch;max-width:1120px;margin-inline:auto}
 
 /* Stage : rendu 3D + habillage HUD */
-.lab__stage{position:relative;border-radius:var(--r-xl);overflow:hidden;min-height:clamp(380px,54vh,560px);
+.lab__stage{position:relative;border-radius:var(--r-xl);overflow:hidden;min-height:clamp(340px,48vh,500px);
   background:radial-gradient(120% 100% at 50% -6%,#0D3A69,#071F3A 58%,#05162A);
   border:1px solid rgba(120,200,240,.18);box-shadow:0 44px 90px -42px rgba(0,0,0,.72),inset 0 0 70px rgba(70,205,239,.05)}
 .lab__grid{position:absolute;inset:0;z-index:1;background-image:linear-gradient(rgba(120,205,240,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(120,205,240,.06) 1px,transparent 1px);background-size:40px 40px;-webkit-mask-image:radial-gradient(circle at 50% 56%,#000 34%,transparent 80%);mask-image:radial-gradient(circle at 50% 56%,#000 34%,transparent 80%);animation:gridpan 26s linear infinite}
@@ -309,26 +315,31 @@ p{margin:0}
 .lab__drag{position:absolute;bottom:13px;left:50%;transform:translateX(-50%);z-index:5;display:inline-flex;align-items:center;gap:7px;font-family:var(--data);font-size:.58rem;letter-spacing:.08em;color:rgba(190,220,242,.55);pointer-events:none}
 .lab__drag svg{width:15px;height:15px}
 
-/* Panel : étapes */
-.lab__panel{display:flex;flex-direction:column;gap:14px;justify-content:center;min-width:0}
+/* Panel : détail actif (fondu) + rail des étapes */
+.lab__panel{display:flex;flex-direction:column;gap:clamp(16px,2.2vw,24px);justify-content:center;min-width:0}
+
+.lab__detail{position:relative;min-height:clamp(196px,25vh,244px)}
+.dtl{display:none}
+.dtl.is-active{display:block;animation:dtlin .5s var(--ease) both}
+@keyframes dtlin{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.dtl__step{font-family:var(--data);font-size:.66rem;letter-spacing:.18em;text-transform:uppercase;color:var(--c);margin:0 0 12px}
+.dtl__name{font-family:var(--titre);font-weight:700;font-size:clamp(1.5rem,2.6vw,2.1rem);letter-spacing:-.03em;color:#fff;margin:0}
+.dtl__name em{font-style:normal;font-weight:500;font-size:.62em;color:rgba(206,227,245,.66);margin-left:8px}
+.dtl__desc{margin:16px 0 0;font-size:.98rem;line-height:1.55;color:rgba(206,227,245,.82);max-width:52ch}
+.dtl__spec{margin-top:18px;display:inline-flex;font-family:var(--data);font-size:.62rem;letter-spacing:.06em;color:#eaf6ff;background:color-mix(in srgb,var(--c) 15%,transparent);border:1px solid color-mix(in srgb,var(--c) 38%,transparent);padding:8px 14px;border-radius:var(--r-pill)}
+
+.lab__rail{list-style:none;margin:0;padding:0;display:flex;gap:8px}
+.rseg{flex:1 1 0;min-width:0}
+.rseg button{width:100%;display:flex;flex-direction:column;align-items:flex-start;gap:3px;padding:11px 12px;border-radius:var(--r-sm);cursor:pointer;text-align:left;font-family:inherit;background:rgba(255,255,255,.03);border:1px solid rgba(150,205,240,.13);transition:background .3s,border-color .3s,transform .3s var(--ease)}
+.rseg button:hover{background:rgba(255,255,255,.06)}
+.rseg.is-active button{background:color-mix(in srgb,var(--c) 14%,transparent);border-color:color-mix(in srgb,var(--c) 55%,transparent);transform:translateY(-2px)}
+.rseg__no{font-family:var(--data);font-size:.62rem;letter-spacing:.08em;color:rgba(150,220,245,.55);transition:color .3s}
+.rseg.is-active .rseg__no{color:var(--c)}
+.rseg__code{font-family:var(--titre);font-weight:700;font-size:.98rem;letter-spacing:-.02em;color:rgba(230,240,248,.75)}
+.rseg.is-active .rseg__code{color:#fff}
+
 .lab__track{height:4px;border-radius:4px;background:rgba(120,205,240,.14);overflow:hidden}
-.lab__track span{display:block;height:100%;width:20%;border-radius:4px;background:linear-gradient(90deg,var(--acc),color-mix(in srgb,var(--acc) 35%,#fff));box-shadow:0 0 12px var(--acc);transition:width .5s var(--ease),background .5s}
-.lab__steps{list-style:none;margin:0;padding:0;display:grid;gap:8px}
-.lstep{border-radius:var(--r-md);border:1px solid rgba(150,205,240,.13);background:rgba(255,255,255,.03);overflow:hidden;transition:background .35s,border-color .35s}
-.lstep.is-active{background:rgba(255,255,255,.07);border-color:color-mix(in srgb,var(--c) 55%,transparent)}
-.lstep__head{width:100%;display:flex;align-items:center;gap:14px;padding:13px 18px;background:none;border:0;cursor:pointer;text-align:left;color:#fff;font-family:inherit}
-.lstep__no{font-family:var(--data);font-size:.72rem;color:rgba(150,220,245,.55);flex:none;transition:color .3s}
-.lstep.is-active .lstep__no{color:var(--c)}
-.lstep__name{font-family:var(--titre);font-weight:700;font-size:1.02rem;letter-spacing:-.02em}
-.lstep__name em{font-style:normal;color:rgba(206,227,245,.6);font-weight:500;margin-left:3px}
-.lstep__dot{margin-left:auto;width:10px;height:10px;border-radius:50%;background:var(--c);opacity:.4;flex:none;transition:opacity .35s,box-shadow .35s}
-.lstep.is-active .lstep__dot{opacity:1;box-shadow:0 0 0 4px color-mix(in srgb,var(--c) 18%,transparent),0 0 12px var(--c)}
-.lstep__more{display:grid;grid-template-rows:0fr;transition:grid-template-rows .42s var(--ease)}
-.lstep.is-active .lstep__more{grid-template-rows:1fr}
-.lstep__inner{overflow:hidden;min-height:0;padding:0 18px}
-.lstep.is-active .lstep__inner{padding-bottom:16px}
-.lstep__inner p{margin:0;font-size:.9rem;color:rgba(206,227,245,.8);max-width:58ch}
-.lstep__spec{margin-top:13px;display:inline-flex;font-family:var(--data);font-size:.6rem;letter-spacing:.06em;color:#eaf6ff;background:color-mix(in srgb,var(--c) 14%,transparent);border:1px solid color-mix(in srgb,var(--c) 35%,transparent);padding:6px 12px;border-radius:var(--r-pill)}
+.lab__track span{display:block;height:100%;width:0;border-radius:4px;background:linear-gradient(90deg,var(--acc),color-mix(in srgb,var(--acc) 35%,#fff));box-shadow:0 0 12px var(--acc);transition:width .12s linear,background .5s}
 
 /* Bandeau « en vrai » : photo intérieure sous la 3D */
 .realstrip{display:grid;grid-template-columns:auto 1fr;gap:clamp(22px,3vw,46px);align-items:center;max-width:1120px;margin:clamp(20px,3vw,36px) auto 0;padding:clamp(18px,2.4vw,28px);border-radius:var(--r-xl);background:rgba(255,255,255,.04);border:1px solid rgba(150,205,240,.14)}
@@ -441,8 +452,13 @@ p{margin:0}
   .mgrid{grid-template-columns:1fr;max-width:460px}
   .compare{grid-template-columns:1fr;gap:14px}
   .compare__arrow{transform:rotate(90deg);margin-inline:auto}
-  .lab{grid-template-columns:1fr;gap:18px}
-  .lab__stage{min-height:clamp(340px,60vh,460px)}
+  .lab{grid-template-columns:1fr;gap:14px}
+  .lab__stage{min-height:clamp(268px,40vh,400px)}
+  .labscroll.is-scrolly{height:300vh}
+  .lab__detail{min-height:150px}
+  .dtl__desc{font-size:.92rem;margin-top:12px}
+  .dtl__spec{margin-top:12px}
+  .rseg button{padding:9px 8px;align-items:center}
   .law{grid-template-columns:1fr}
   .footer__inner{grid-template-columns:1fr 1fr}
   .cta__coords{grid-template-columns:repeat(2,1fr)}
