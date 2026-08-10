@@ -21,9 +21,7 @@
   window.addEventListener('load', sizeHero);
   window.addEventListener('resize', sizeHero, { passive: true });
 
-  /* ---- Nav collée, progression, bouton flottant, remplissage filtration ---- */
-  var flow = document.getElementById('flow');
-  var flowfill = document.getElementById('flowfill');
+  /* ---- Nav collée, progression, bouton flottant ---- */
   var ticking = false;
 
   function frame() {
@@ -32,12 +30,6 @@
     if (nav) nav.classList.toggle('is-stuck', y > 10);
     if (fab) fab.classList.toggle('is-on', y > 600);
     if (bar) bar.style.width = (max > 0 ? (y / max) * 100 : 0) + '%';
-
-    if (flow && flowfill) {
-      var r = flow.getBoundingClientRect();
-      var p = (window.innerHeight * 0.62 - r.top) / r.height;
-      flowfill.style.height = Math.max(0, Math.min(1, p)) * 100 + '%';
-    }
     ticking = false;
   }
   function onScroll() {
@@ -49,19 +41,51 @@
   window.addEventListener('scroll', onScroll, { passive: true });
   window.addEventListener('resize', onScroll, { passive: true });
 
-  /* ---- Filtration : chaque cartouche s'allume quand elle est centrée ---- */
-  var stages = document.querySelectorAll('.fstage');
-  var nodes = document.querySelectorAll('.flow__node');
-  if ('IntersectionObserver' in window && stages.length) {
-    var fio = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        var idx = parseInt(entry.target.getAttribute('data-stage'), 10);
-        entry.target.classList.toggle('is-live', entry.isIntersecting);
-        if (nodes[idx]) nodes[idx].classList.toggle('is-live', entry.isIntersecting);
+  /* ---- Filtration : parcours de l'eau qui se déroule tout seul ---- */
+  (function () {
+    var steps = Array.prototype.slice.call(document.querySelectorAll('#filtsteps .fstep'));
+    if (!steps.length) return;
+    var marks = document.querySelectorAll('.filt .mark');
+    var view = document.getElementById('filtview');
+    var filt = document.querySelector('.filt');
+    var idx = 0, timer = null, visible = false;
+    var DELAY = 3600;
+
+    function paint(i) {
+      idx = i;
+      steps.forEach(function (s) {
+        var on = parseInt(s.getAttribute('data-i'), 10) === i;
+        s.classList.toggle('is-active', on);
+        var head = s.querySelector('.fstep__head');
+        if (head) head.setAttribute('aria-expanded', on ? 'true' : 'false');
       });
-    }, { rootMargin: '-38% 0px -38% 0px' });
-    stages.forEach(function (s) { fio.observe(s); });
-  }
+      marks.forEach(function (m) {
+        m.classList.toggle('is-on', parseInt(m.getAttribute('data-mark'), 10) === i);
+      });
+      if (view) view.classList.toggle('is-uv', i === 4);
+    }
+    function advance() { paint((idx + 1) % steps.length); }
+    function play() { if (timer || reduced || !visible) return; timer = setInterval(advance, DELAY); }
+    function stop() { if (timer) { clearInterval(timer); timer = null; } }
+    function restart() { stop(); play(); }
+
+    steps.forEach(function (s) {
+      var head = s.querySelector('.fstep__head');
+      if (head) head.addEventListener('click', function () { paint(parseInt(s.getAttribute('data-i'), 10)); restart(); });
+    });
+    if (filt) {
+      filt.addEventListener('mouseenter', stop);
+      filt.addEventListener('mouseleave', play);
+    }
+    if ('IntersectionObserver' in window && filt) {
+      new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) { visible = e.isIntersecting; if (visible) play(); else stop(); });
+      }, { threshold: 0.35 }).observe(filt);
+    } else { visible = true; play(); }
+    document.addEventListener('visibilitychange', function () { if (document.hidden) stop(); else play(); });
+
+    paint(0);
+  })();
 
   /* ---- Fiches modèles ---- */
   document.querySelectorAll('[data-card]').forEach(function (card) {
@@ -76,7 +100,7 @@
 
   /* ---- Apparition au scroll ---- */
   var targets = document.querySelectorAll(
-    '.hero__copy > *, .hero__visual, .shead, .cpanel, .compare__arrow, .mcard, .fstage, .step, .plan, .plans__note, .law, .qa, .cta'
+    '.hero__copy > *, .hero__visual, .shead, .cpanel, .compare__arrow, .mcard, .filt, .step, .plan, .plans__note, .law, .qa, .cta'
   );
   if (reduced || !('IntersectionObserver' in window)) {
     targets.forEach(function (el) { el.classList.add('in'); });

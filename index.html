@@ -289,73 +289,79 @@
       <p class="shead__lead">L'eau du réseau entre par le bas, traverse les quatre cartouches dans l'ordre, puis passe sous la lampe UV avant d'arriver au robinet. À chaque entretien, nous remplaçons les cartouches. C'est compris.</p>
     </header>
 
-    <div class="flow" id="flow">
-      <div class="flow__stick">
-        <figure class="flow__photo">
-          <img src="assets/fontaine-interieur.webp" alt="Intérieur de la fontaine colonne : les quatre cartouches de filtration en place" width="320" height="490" loading="lazy" decoding="async">
-          <figcaption>Les 4 cartouches, à l'intérieur de la colonne</figcaption>
-        </figure>
-        <div class="flow__line" aria-hidden="true">
-          <span class="flow__fill" id="flowfill"></span>
-          <i class="flow__node" data-node="0"></i>
-          <i class="flow__node" data-node="1"></i>
-          <i class="flow__node" data-node="2"></i>
-          <i class="flow__node" data-node="3"></i>
-          <i class="flow__node" data-node="4"></i>
-        </div>
-      </div>
+    <div class="filt">
+      <figure class="filt__view" id="filtview">
+        <img src="assets/fontaine-interieur.webp" alt="Intérieur d'une colonne UNIK'EAU : les quatre cartouches de filtration en place" width="320" height="490" loading="lazy" decoding="async">
+        <span class="filt__drip" aria-hidden="true"></span>
+        <span class="mark" data-mark="0" style="--x:35.5%;--y:60%"></span>
+        <span class="mark" data-mark="1" style="--x:45%;--y:60%"></span>
+        <span class="mark" data-mark="2" style="--x:54.5%;--y:60%"></span>
+        <span class="mark" data-mark="3" style="--x:64%;--y:60%"></span>
+        <span class="filt__uv" aria-hidden="true">UV</span>
+        <figcaption>À l'intérieur d'une colonne</figcaption>
+      </figure>
 
-      <div class="flow__stages">
-        <article class="fstage" data-stage="0">
-          <figure class="cart"><img src="assets/cartouche-pp.webp" alt="Cartouche PP" width="104" height="250" loading="lazy" decoding="async"></figure>
-          <div class="fstage__body">
-            <p class="fstage__step">Cartouche 1 · Pré-filtration</p>
-            <h3>PP — Sédiments</h3>
-            <p class="fstage__txt">Une fibre de polypropylène bobinée arrête tout ce qui se voit : sable, rouille, particules du réseau. Elle encaisse en premier et protège les trois cartouches suivantes.</p>
-            <p class="fstage__spec">Sable · rouille · particules</p>
-          </div>
-        </article>
+      <ol class="filt__steps" id="filtsteps" aria-label="Les étapes de filtration">
+        <li class="fstep is-active" data-i="0">
+          <button type="button" class="fstep__head" aria-expanded="true">
+            <span class="fstep__no">01</span>
+            <span class="fstep__name">PP <em>Sédiments</em></span>
+            <span class="fstep__dot" style="--c:#F2A007"></span>
+          </button>
+          <div class="fstep__more"><div class="fstep__inner">
+            <p>Une fibre de polypropylène bobinée arrête tout ce qui se voit : sable, rouille, particules du réseau. Elle encaisse en premier et protège les trois cartouches suivantes.</p>
+            <span class="fstep__spec">Sable · rouille · particules</span>
+          </div></div>
+        </li>
 
-        <article class="fstage" data-stage="1">
-          <figure class="cart"><img src="assets/cartouche-gac.webp" alt="Cartouche GAC" width="104" height="250" loading="lazy" decoding="async"></figure>
-          <div class="fstage__body">
-            <p class="fstage__step">Cartouche 2 · Charbon actif</p>
-            <h3>GAC — Goût et odeurs</h3>
-            <p class="fstage__txt">Des grains de charbon actif captent le chlore, les odeurs et les mauvais goûts. C'est ici que l'eau du robinet change vraiment de goût.</p>
-            <p class="fstage__spec">Chlore · odeurs · goûts</p>
-          </div>
-        </article>
+        <li class="fstep" data-i="1">
+          <button type="button" class="fstep__head" aria-expanded="false">
+            <span class="fstep__no">02</span>
+            <span class="fstep__name">GAC <em>Goût et odeurs</em></span>
+            <span class="fstep__dot" style="--c:#5A6E80"></span>
+          </button>
+          <div class="fstep__more"><div class="fstep__inner">
+            <p>Des grains de charbon actif captent le chlore, les odeurs et les mauvais goûts. C'est ici que l'eau du robinet change vraiment de goût.</p>
+            <span class="fstep__spec">Chlore · odeurs · goûts</span>
+          </div></div>
+        </li>
 
-        <article class="fstage" data-stage="2">
-          <figure class="cart"><img src="assets/cartouche-uf.webp" alt="Cartouche UF" width="104" height="250" loading="lazy" decoding="async"></figure>
-          <div class="fstage__body">
-            <p class="fstage__step">Cartouche 3 · Ultrafiltration</p>
-            <h3>UF — Membrane 0,01 micron</h3>
-            <p class="fstage__txt">Une membrane aux pores des milliers de fois plus fins qu'un cheveu. Elle retient les bactéries et les impuretés microscopiques, tout en laissant passer les minéraux de l'eau.</p>
-            <p class="fstage__spec">Bactéries · micro-impuretés</p>
-          </div>
-        </article>
+        <li class="fstep" data-i="2">
+          <button type="button" class="fstep__head" aria-expanded="false">
+            <span class="fstep__no">03</span>
+            <span class="fstep__name">UF <em>Membrane 0,01 micron</em></span>
+            <span class="fstep__dot" style="--c:#109E7B"></span>
+          </button>
+          <div class="fstep__more"><div class="fstep__inner">
+            <p>Une membrane aux pores des milliers de fois plus fins qu'un cheveu. Elle retient les bactéries et les impuretés microscopiques, tout en laissant passer les minéraux de l'eau.</p>
+            <span class="fstep__spec">Bactéries · micro-impuretés</span>
+          </div></div>
+        </li>
 
-        <article class="fstage" data-stage="3">
-          <figure class="cart"><img src="assets/cartouche-t33.webp" alt="Cartouche T33" width="104" height="250" loading="lazy" decoding="async"></figure>
-          <div class="fstage__body">
-            <p class="fstage__step">Cartouche 4 · Affinage</p>
-            <h3>T33 — Post-charbon</h3>
-            <p class="fstage__txt">Un dernier lit de charbon polit le goût juste avant la sortie. C'est la touche finale, celle qui rend l'eau vraiment agréable à boire.</p>
-            <p class="fstage__spec">Affinage du goût · dernière étape</p>
-          </div>
-        </article>
+        <li class="fstep" data-i="3">
+          <button type="button" class="fstep__head" aria-expanded="false">
+            <span class="fstep__no">04</span>
+            <span class="fstep__name">T33 <em>Post-charbon</em></span>
+            <span class="fstep__dot" style="--c:#0F7FD4"></span>
+          </button>
+          <div class="fstep__more"><div class="fstep__inner">
+            <p>Un dernier lit de charbon polit le goût juste avant la sortie. C'est la touche finale, celle qui rend l'eau vraiment agréable à boire.</p>
+            <span class="fstep__spec">Affinage du goût · dernière étape</span>
+          </div></div>
+        </li>
 
-        <article class="fstage" data-stage="4">
-          <div class="uvtube" aria-hidden="true"><span></span></div>
-          <div class="fstage__body">
-            <p class="fstage__step">En continu · sur la colonne</p>
-            <h3>Lampe UV — Désinfection</h3>
-            <p class="fstage__txt">Dans la fontaine colonne, une lampe UV neutralise en continu les micro-organismes qui passeraient les cartouches. Aucun produit ajouté, aucune odeur : juste de la lumière.</p>
-            <p class="fstage__spec">Micro-organismes · zéro produit chimique</p>
-          </div>
-        </article>
-      </div>
+        <li class="fstep" data-i="4">
+          <button type="button" class="fstep__head" aria-expanded="false">
+            <span class="fstep__no">05</span>
+            <span class="fstep__name">Lampe UV <em>Désinfection</em></span>
+            <span class="fstep__dot" style="--c:#46CDEF"></span>
+          </button>
+          <div class="fstep__more"><div class="fstep__inner">
+            <p>Sur la colonne, une lampe UV neutralise en continu les micro-organismes qui passeraient les cartouches. Aucun produit ajouté, aucune odeur : juste de la lumière.</p>
+            <span class="fstep__spec">Micro-organismes · zéro produit chimique</span>
+          </div></div>
+        </li>
+      </ol>
     </div>
   </div>
 </section>
