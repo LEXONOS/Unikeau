@@ -28,7 +28,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 
 <script type="application/ld+json">
@@ -58,7 +58,7 @@
 </head>
 
 <body>
-<a class="skip" href="#modeles">Aller au contenu</a>
+<a class="skip" href="#principe">Aller au contenu</a>
 <div class="progress" aria-hidden="true"><span id="progressbar"></span></div>
 
 <!-- ============================== NAV ============================== -->
@@ -69,9 +69,9 @@
     </a>
 
     <nav class="nav__links" aria-label="Navigation principale">
+      <a href="#principe">Principe</a>
       <a href="#modeles">Modèles</a>
       <a href="#filtration">Filtration</a>
-      <a href="#installation">Installation</a>
       <a href="#tarifs">Tarifs</a>
       <a href="#faq">Questions</a>
     </nav>
@@ -87,9 +87,9 @@
   </div>
 
   <div class="mobilemenu" id="mobilemenu" hidden>
+    <a href="#principe">Principe</a>
     <a href="#modeles">Modèles</a>
     <a href="#filtration">Filtration</a>
-    <a href="#installation">Installation</a>
     <a href="#tarifs">Tarifs</a>
     <a href="#faq">Questions</a>
     <a href="#contact">Contact</a>
@@ -103,9 +103,9 @@
   <div class="wrap hero__grid">
 
     <div class="hero__copy">
-      <p class="pill"><i class="dot"></i>Toute la Guadeloupe &middot; Pros &amp; particuliers</p>
-      <h1>La fontaine à eau,<br><em>branchée sur votre réseau.</em></h1>
-      <p class="lead">Raccordée sur votre arrivée d'eau, en entreprise comme à la maison. Pas de bonbonnes à stocker, pas de livraison à attendre : l'eau est filtrée sur place, en illimité, et nous venons faire l'entretien, compris dans votre forfait.</p>
+      <p class="pill"><i class="dot"></i>Toute la Guadeloupe · Pros &amp; particuliers</p>
+      <h1>La fontaine à eau, <em>branchée sur votre réseau.</em></h1>
+      <p class="lead">En entreprise comme à la maison, raccordée directement sur votre arrivée d'eau. Plus de bonbonnes à commander, à stocker ou à porter : l'eau du robinet est filtrée sur place, en illimité, et l'entretien est compris dans le forfait.</p>
 
       <div class="hero__cta">
         <a class="btn btn--primary btn--lg" href="https://wa.me/590690342476?text=Bonjour%20UNIK'EAU%2C%20je%20souhaite%20un%20devis%20pour%20une%20fontaine%20%C3%A0%20eau." target="_blank" rel="noopener">
@@ -116,23 +116,21 @@
       </div>
 
       <ul class="kpi">
-        <li><strong>Dès 50 &euro;</strong><span>TTC / mois, entretien compris</span></li>
+        <li><strong>Dès 50 €</strong><span>TTC / mois, entretien compris</span></li>
         <li><strong>4 + UV</strong><span>étapes de filtration</span></li>
         <li><strong>0</strong><span>bonbonne à stocker</span></li>
       </ul>
     </div>
 
     <div class="hero__visual">
-      <div class="stagepanel">
-        <img class="stagepanel__product" src="assets/fontaine-grande.webp" alt="Fontaine à eau UNIK'EAU sur pied, raccordée au réseau" width="529" height="1216" fetchpriority="high" decoding="async">
-        <span class="stagepanel__floor" aria-hidden="true"></span>
+      <div class="stage">
+        <span class="stage__rings" aria-hidden="true"></span>
+        <span class="stage__horizon" aria-hidden="true"></span>
+        <img class="stage__product" src="assets/fontaine-grande.webp" alt="Fontaine à eau UNIK'EAU sur pied, raccordée au réseau" width="529" height="1216" fetchpriority="high" decoding="async">
+        <span class="stage__floor" aria-hidden="true"></span>
         <span class="chip chip--a"><i></i>Chaude · Tempérée · Froide</span>
         <span class="chip chip--b"><i></i>Lampe UV intégrée</span>
         <span class="chip chip--c"><i></i>Entretien compris</span>
-      </div>
-      <div class="dstack" aria-hidden="true">
-        <figure class="dcard dcard--taps"><figcaption>3 sorties d'eau</figcaption></figure>
-        <figure class="dcard dcard--counter"><figcaption>Modèle comptoir</figcaption></figure>
       </div>
     </div>
 
@@ -147,25 +145,40 @@
   </div>
 </div>
 
-<!-- ============================== ATOUTS ============================== -->
-<section class="section section--tight">
+<!-- ============================== PRINCIPE ============================== -->
+<section class="section" id="principe">
   <div class="wrap">
-    <div class="perks">
-      <article class="perk perk--bleu">
-        <span class="perk__ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4h6l1 4H8l1-4Z"/><path d="M8 8h8v10a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2V8Z"/><path d="M4 20 20 4"/></svg></span>
-        <h3>Zéro bonbonne</h3><p>Plus rien à commander ni à porter.</p>
+    <header class="shead">
+      <p class="eyebrow">Le principe</p>
+      <h2>Fini les bonbonnes.<br>Vous branchez le réseau.</h2>
+      <p class="shead__lead">Une fontaine raccordée sur votre arrivée d'eau. Elle filtre l'eau du robinet en continu&nbsp;: vous n'avez plus rien à commander, ni à porter.</p>
+    </header>
+
+    <div class="compare">
+      <article class="cpanel cpanel--old">
+        <p class="cpanel__tag">Avec des bonbonnes</p>
+        <ul class="cpanel__list">
+          <li>Commander des packs, encore et encore</li>
+          <li>Les stocker quelque part</li>
+          <li>Les porter et les changer</li>
+          <li>Attendre la livraison</li>
+          <li>Payer au volume consommé</li>
+        </ul>
       </article>
-      <article class="perk perk--lagon">
-        <span class="perk__ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3s6 6.5 6 10.5A6 6 0 0 1 6 13.5C6 9.5 12 3 12 3Z"/><path d="M9.5 14a2.5 2.5 0 0 0 2.5 2.5"/></svg></span>
-        <h3>Eau illimitée</h3><p>Au débit du réseau, toute la journée.</p>
-      </article>
-      <article class="perk perk--soleil">
-        <span class="perk__ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16v12H4z"/><path d="M4 11h16M8 15h4"/></svg></span>
-        <h3>Forfait fixe</h3><p>Un montant par mois, connu d'avance.</p>
-      </article>
-      <article class="perk perk--palme">
-        <span class="perk__ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14.7 6.3 3 3"/><path d="M4 20l1-4L16.6 4.4a2 2 0 0 1 2.8 0l.2.2a2 2 0 0 1 0 2.8L8 19l-4 1Z"/></svg></span>
-        <h3>Entretien inclus</h3><p>Filtres, nettoyage, dépannage.</p>
+
+      <span class="compare__arrow" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><path d="M4 12h15m0 0-6-6m6 6-6 6"/></svg>
+      </span>
+
+      <article class="cpanel cpanel--new">
+        <p class="cpanel__tag"><img src="assets/logo-unikeau.webp" alt="UNIK'EAU" width="1404" height="1023"></p>
+        <ul class="cpanel__list cpanel__list--ok">
+          <li>Branchée sur le réseau, débit illimité</li>
+          <li>Rien à stocker, rien à porter</li>
+          <li>Filtres et entretien compris</li>
+          <li>Un forfait fixe, connu d'avance</li>
+          <li>Un seul interlocuteur en Guadeloupe</li>
+        </ul>
       </article>
     </div>
   </div>
@@ -177,7 +190,7 @@
     <header class="shead">
       <p class="eyebrow">Deux modèles</p>
       <h2>Un seul critère : combien vous êtes.</h2>
-      <p class="shead__lead">Le nombre de personnes fixe la fréquence de remplacement des filtres. Tout le reste suit.</p>
+      <p class="shead__lead">Le nombre de personnes fixe la fréquence d'entretien. Le reste est identique&nbsp;: même filtration, même eau chaude, tempérée et froide.</p>
     </header>
 
     <div class="mgrid">
@@ -193,7 +206,7 @@
 
           <div class="meters">
             <p class="meter"><span class="meter__k">Personnes</span><span class="meter__v">1 à 5</span></p>
-            <p class="meter meter--palme"><span class="meter__k">Filtres</span><span class="meter__v">2 × / an</span></p>
+            <p class="meter meter--palme"><span class="meter__k">Entretien</span><span class="meter__v">2 × / an</span></p>
           </div>
 
           <button class="mcard__toggle" type="button" aria-expanded="false" aria-controls="specs-comptoir">
@@ -208,7 +221,6 @@
                 <div><dt>Entretien</dt><dd>2 passages par an, un tous les 6 mois</dd></div>
                 <div><dt>Eau</dt><dd>Chaude et froide</dd></div>
                 <div><dt>Filtration</dt><dd>4 étapes : PP + GAC + UF + T33</dd></div>
-                <div><dt>Désinfection</dt><dd>—</dd></div>
                 <div><dt>Alimentation</dt><dd>Raccordée au réseau d'eau</dd></div>
                 <div><dt>Format</dt><dd>Pose sur plan de travail</dd></div>
                 <div><dt>Coloris</dt><dd>Anthracite uni</dd></div>
@@ -227,11 +239,11 @@
         <div class="mcard__body">
           <p class="mcard__kicker">Sur pied · gris et noir</p>
           <h3>La colonne</h3>
-          <p class="mcard__pitch">Réservoirs plus grands et lampe UV, pour suivre le rythme d'une équipe.</p>
+          <p class="mcard__pitch">Grands réservoirs et lampe UV, pour suivre le rythme d'une équipe.</p>
 
           <div class="meters">
             <p class="meter"><span class="meter__k">Personnes</span><span class="meter__v">6 et +</span></p>
-            <p class="meter meter--palme"><span class="meter__k">Filtres</span><span class="meter__v">4 × / an</span></p>
+            <p class="meter meter--palme"><span class="meter__k">Entretien</span><span class="meter__v">4 × / an</span></p>
           </div>
 
           <button class="mcard__toggle" type="button" aria-expanded="false" aria-controls="specs-colonne">
@@ -268,18 +280,21 @@
 
 <!-- ============================== FILTRATION ============================== -->
 <section class="section section--dark" id="filtration">
+  <svg class="wave" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true"><path d="M0 55 C 240 10 480 10 720 45 C 960 80 1200 80 1440 40 L1440 0 L0 0 Z"/></svg>
+
   <div class="wrap">
     <header class="shead">
-      <p class="eyebrow">Filtration · identique sur les deux modèles</p>
-      <h2>4 cartouches et une lampe UV<br>travaillent pour vous.</h2>
-      <p class="shead__lead">L'eau du réseau traverse quatre cartouches, dans cet ordre, avant d'arriver au robinet. Nous les remplaçons à chaque entretien, compris dans votre forfait.</p>
+      <p class="eyebrow">Le parcours de l'eau · identique sur les deux modèles</p>
+      <h2>Quatre cartouches,<br>puis la lumière.</h2>
+      <p class="shead__lead">L'eau du réseau entre par le bas, traverse les quatre cartouches dans l'ordre, puis passe sous la lampe UV avant d'arriver au robinet. À chaque entretien, nous remplaçons les cartouches. C'est compris.</p>
     </header>
 
     <div class="flow" id="flow">
       <div class="flow__stick">
-        <div class="flow__machine">
-          <img src="assets/fontaine-grande-2.webp" alt="" aria-hidden="true" width="461" height="1016" loading="lazy" decoding="async">
-        </div>
+        <figure class="flow__photo">
+          <img src="assets/fontaine-interieur.webp" alt="Intérieur de la fontaine colonne : les quatre cartouches de filtration en place" width="320" height="490" loading="lazy" decoding="async">
+          <figcaption>Les 4 cartouches, à l'intérieur de la colonne</figcaption>
+        </figure>
         <div class="flow__line" aria-hidden="true">
           <span class="flow__fill" id="flowfill"></span>
           <i class="flow__node" data-node="0"></i>
@@ -288,7 +303,6 @@
           <i class="flow__node" data-node="3"></i>
           <i class="flow__node" data-node="4"></i>
         </div>
-        <p class="flow__legend">Le trajet de l'eau<br>dans la machine</p>
       </div>
 
       <div class="flow__stages">
@@ -296,8 +310,8 @@
           <figure class="cart"><img src="assets/cartouche-pp.webp" alt="Cartouche PP" width="104" height="250" loading="lazy" decoding="async"></figure>
           <div class="fstage__body">
             <p class="fstage__step">Cartouche 1 · Pré-filtration</p>
-            <h3>PP &mdash; Sédiments</h3>
-            <p class="fstage__txt">Une fibre de polypropylène bobinée qui arrête tout ce qui se voit : sable, rouille, particules en suspension du réseau. Elle encaisse en premier et protège les trois cartouches suivantes.</p>
+            <h3>PP — Sédiments</h3>
+            <p class="fstage__txt">Une fibre de polypropylène bobinée arrête tout ce qui se voit : sable, rouille, particules du réseau. Elle encaisse en premier et protège les trois cartouches suivantes.</p>
             <p class="fstage__spec">Sable · rouille · particules</p>
           </div>
         </article>
@@ -306,8 +320,8 @@
           <figure class="cart"><img src="assets/cartouche-gac.webp" alt="Cartouche GAC" width="104" height="250" loading="lazy" decoding="async"></figure>
           <div class="fstage__body">
             <p class="fstage__step">Cartouche 2 · Charbon actif</p>
-            <h3>GAC &mdash; Goût et odeurs</h3>
-            <p class="fstage__txt">Des grains de charbon actif absorbent le chlore, les odeurs et les mauvais goûts. C'est ici que l'eau du robinet change vraiment de goût.</p>
+            <h3>GAC — Goût et odeurs</h3>
+            <p class="fstage__txt">Des grains de charbon actif captent le chlore, les odeurs et les mauvais goûts. C'est ici que l'eau du robinet change vraiment de goût.</p>
             <p class="fstage__spec">Chlore · odeurs · goûts</p>
           </div>
         </article>
@@ -316,7 +330,7 @@
           <figure class="cart"><img src="assets/cartouche-uf.webp" alt="Cartouche UF" width="104" height="250" loading="lazy" decoding="async"></figure>
           <div class="fstage__body">
             <p class="fstage__step">Cartouche 3 · Ultrafiltration</p>
-            <h3>UF &mdash; Membrane 0,01 micron</h3>
+            <h3>UF — Membrane 0,01 micron</h3>
             <p class="fstage__txt">Une membrane aux pores des milliers de fois plus fins qu'un cheveu. Elle retient les bactéries et les impuretés microscopiques, tout en laissant passer les minéraux de l'eau.</p>
             <p class="fstage__spec">Bactéries · micro-impuretés</p>
           </div>
@@ -326,7 +340,7 @@
           <figure class="cart"><img src="assets/cartouche-t33.webp" alt="Cartouche T33" width="104" height="250" loading="lazy" decoding="async"></figure>
           <div class="fstage__body">
             <p class="fstage__step">Cartouche 4 · Affinage</p>
-            <h3>T33 &mdash; Post-charbon</h3>
+            <h3>T33 — Post-charbon</h3>
             <p class="fstage__txt">Un dernier lit de charbon polit le goût juste avant la sortie. C'est la touche finale, celle qui rend l'eau vraiment agréable à boire.</p>
             <p class="fstage__spec">Affinage du goût · dernière étape</p>
           </div>
@@ -336,7 +350,7 @@
           <div class="uvtube" aria-hidden="true"><span></span></div>
           <div class="fstage__body">
             <p class="fstage__step">En continu · sur la colonne</p>
-            <h3>Lampe UV &mdash; Désinfection</h3>
+            <h3>Lampe UV — Désinfection</h3>
             <p class="fstage__txt">Dans la fontaine colonne, une lampe UV neutralise en continu les micro-organismes qui passeraient les cartouches. Aucun produit ajouté, aucune odeur : juste de la lumière.</p>
             <p class="fstage__spec">Micro-organismes · zéro produit chimique</p>
           </div>
@@ -351,7 +365,7 @@
   <div class="wrap">
     <header class="shead">
       <p class="eyebrow">Comment ça se passe</p>
-      <h2>Vous ouvrez le robinet.<br>On s'occupe de tout le reste.</h2>
+      <h2>Vous ouvrez le robinet.<br>On s'occupe du reste.</h2>
       <p class="shead__lead">Une seule chose est nécessaire chez vous : une arrivée d'eau potable.</p>
     </header>
 
@@ -386,7 +400,7 @@
     <header class="shead">
       <p class="eyebrow">Tarifs</p>
       <h2>Un forfait, tout compris.</h2>
-      <p class="shead__lead">Le forfait couvre la location de la fontaine, l'installation, l'entretien et le dépannage. La seule chose à prévoir chez vous : une arrivée d'eau potable.</p>
+      <p class="shead__lead">Location de la fontaine, installation, entretien et dépannage sont dans le prix. La seule chose à prévoir chez vous : une arrivée d'eau potable.</p>
     </header>
 
     <div class="plans">
@@ -428,8 +442,8 @@
     <div class="law">
       <div class="law__head">
         <p class="eyebrow">Obligation employeur</p>
-        <h2>L'eau potable au travail, c'est la loi. La fournir, c'est notre travail.</h2>
-        <p>Le Code du travail impose de mettre à disposition de l'eau potable et fraîche, avec une installation entretenue. C'est exactement ce que couvre le forfait : la fontaine, sa pose et son entretien sont compris. Il ne reste rien à organiser de votre côté.</p>
+        <h2>L'eau potable au travail, c'est la loi. La fournir, c'est notre métier.</h2>
+        <p>Le Code du travail impose de mettre à disposition une eau potable et fraîche, avec une installation entretenue. Le forfait couvre tout : la fontaine, sa pose et son entretien sont compris. Il ne reste rien à organiser de votre côté.</p>
       </div>
       <ul class="law__points">
         <li><strong>Entretien compris et planifié</strong><span>Nous venons à date fixe, sans surcoût.</span></li>
@@ -455,7 +469,7 @@
       </details>
       <details class="qa">
         <summary>Pourquoi le nombre de personnes change le prix ?<span class="qa__plus" aria-hidden="true"></span></summary>
-        <div class="qa__body"><p>Plus il y a de tirages, plus les filtres s'usent vite. Jusqu'à 5 personnes, deux passages par an suffisent. Au-delà, il en faut quatre.</p></div>
+        <div class="qa__body"><p>Plus il y a de tirages, plus les cartouches s'usent vite. Jusqu'à 5 personnes, deux entretiens par an suffisent. Au-delà, il en faut quatre.</p></div>
       </details>
       <details class="qa">
         <summary>Qui paie l'eau consommée ?<span class="qa__plus" aria-hidden="true"></span></summary>
@@ -484,7 +498,7 @@
       <div class="cta__inner">
         <p class="eyebrow">Devis gratuit</p>
         <h2>Dites-nous combien vous êtes.<br>On répond avec un prix.</h2>
-        <p class="cta__lead">Une photo de l'endroit prévu suffit. Réponse le jour même.</p>
+        <p class="cta__lead">Une photo de l'endroit prévu suffit. Réponse le jour même, par WhatsApp ou par téléphone.</p>
 
         <div class="cta__actions">
           <a class="btn btn--primary btn--lg" href="https://wa.me/590690342476?text=Bonjour%20UNIK'EAU%2C%20je%20souhaite%20un%20devis.%20Nous%20sommes%20___%20personnes%20%C3%A0%20___." target="_blank" rel="noopener">
@@ -516,9 +530,9 @@
       <p>Fontaines à eau sur réseau, installées et entretenues en Guadeloupe.</p>
     </div>
     <nav class="footer__nav" aria-label="Pied de page">
+      <a href="#principe">Principe</a>
       <a href="#modeles">Modèles</a>
       <a href="#filtration">Filtration</a>
-      <a href="#installation">Installation</a>
       <a href="#tarifs">Tarifs</a>
       <a href="#faq">Questions</a>
       <a href="#contact">Contact</a>
