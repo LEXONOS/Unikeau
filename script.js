@@ -41,46 +41,65 @@
   window.addEventListener('scroll', onScroll, { passive: true });
   window.addEventListener('resize', onScroll, { passive: true });
 
-  /* ---- Filtration : parcours de l'eau qui se déroule tout seul ---- */
+  /* ---- Filtration 3D : la bonbonne tourne et change à chaque étape ---- */
   (function () {
-    var steps = Array.prototype.slice.call(document.querySelectorAll('#filtsteps .fstep'));
-    if (!steps.length) return;
-    var marks = document.querySelectorAll('.filt .mark');
-    var view = document.getElementById('filtview');
-    var filt = document.querySelector('.filt');
-    var idx = 0, timer = null, visible = false;
-    var DELAY = 3600;
+    var lab = document.getElementById('lab');
+    if (!lab) return;
+    var steps = Array.prototype.slice.call(lab.querySelectorAll('.lstep'));
+    var mvs = Array.prototype.slice.call(lab.querySelectorAll('.mv'));
+    var uv = lab.querySelector('.uvstage');
+    var bar = document.getElementById('labBar');
+    var tag = document.getElementById('labTag');
+    var idxEl = document.getElementById('labIdx');
+    var accents = ['#1E86D6', '#E8792B', '#2FA84F', '#D6236B', '#46CDEF'];
+    var codes = ['PP', 'GAC', 'UF', 'T33', 'UV'];
+    var idx = 0, timer = null, visible = false, scanT = null;
+    var DELAY = 4200, N = steps.length;
 
     function paint(i) {
       idx = i;
+      lab.style.setProperty('--acc', accents[i] || accents[0]);
       steps.forEach(function (s) {
         var on = parseInt(s.getAttribute('data-i'), 10) === i;
         s.classList.toggle('is-active', on);
-        var head = s.querySelector('.fstep__head');
-        if (head) head.setAttribute('aria-expanded', on ? 'true' : 'false');
+        var h = s.querySelector('.lstep__head');
+        if (h) h.setAttribute('aria-expanded', on ? 'true' : 'false');
       });
-      marks.forEach(function (m) {
-        m.classList.toggle('is-on', parseInt(m.getAttribute('data-mark'), 10) === i);
+      mvs.forEach(function (m) {
+        m.classList.toggle('is-active', parseInt(m.getAttribute('data-i'), 10) === i);
       });
-      if (view) view.classList.toggle('is-uv', i === 4);
+      if (uv) uv.classList.toggle('is-active', i === 4);
+      if (bar) bar.style.width = ((i + 1) / N) * 100 + '%';
+      if (tag) tag.textContent = (i === 4 ? 'SCAN · UV' : 'SCAN · ' + codes[i]);
+      if (idxEl) idxEl.textContent = ('0' + (i + 1)).slice(-2);
+      // effet de scan qui masque le changement
+      lab.classList.remove('scanning');
+      void lab.offsetWidth;
+      lab.classList.add('scanning');
+      clearTimeout(scanT);
+      scanT = setTimeout(function () { lab.classList.remove('scanning'); }, 650);
     }
-    function advance() { paint((idx + 1) % steps.length); }
+    function advance() { paint((idx + 1) % N); }
     function play() { if (timer || reduced || !visible) return; timer = setInterval(advance, DELAY); }
     function stop() { if (timer) { clearInterval(timer); timer = null; } }
     function restart() { stop(); play(); }
 
     steps.forEach(function (s) {
-      var head = s.querySelector('.fstep__head');
-      if (head) head.addEventListener('click', function () { paint(parseInt(s.getAttribute('data-i'), 10)); restart(); });
+      var h = s.querySelector('.lstep__head');
+      if (h) h.addEventListener('click', function () { paint(parseInt(s.getAttribute('data-i'), 10)); restart(); });
     });
-    if (filt) {
-      filt.addEventListener('mouseenter', stop);
-      filt.addEventListener('mouseleave', play);
-    }
-    if ('IntersectionObserver' in window && filt) {
+    // pause quand on manipule la 3D ou survole
+    lab.addEventListener('mouseenter', stop);
+    lab.addEventListener('mouseleave', play);
+    mvs.forEach(function (m) {
+      m.addEventListener('pointerdown', stop);
+      m.addEventListener('pointerup', function () { restart(); });
+    });
+
+    if ('IntersectionObserver' in window) {
       new IntersectionObserver(function (entries) {
         entries.forEach(function (e) { visible = e.isIntersecting; if (visible) play(); else stop(); });
-      }, { threshold: 0.35 }).observe(filt);
+      }, { threshold: 0.3 }).observe(lab);
     } else { visible = true; play(); }
     document.addEventListener('visibilitychange', function () { if (document.hidden) stop(); else play(); });
 
@@ -100,7 +119,7 @@
 
   /* ---- Apparition au scroll ---- */
   var targets = document.querySelectorAll(
-    '.hero__copy > *, .hero__visual, .shead, .cpanel, .compare__arrow, .mcard, .filt, .step, .plan, .plans__note, .law, .qa, .cta'
+    '.hero__copy > *, .hero__visual, .shead, .cpanel, .compare__arrow, .mcard, .lab, .step, .plan, .plans__note, .law, .qa, .cta'
   );
   if (reduced || !('IntersectionObserver' in window)) {
     targets.forEach(function (el) { el.classList.add('in'); });
