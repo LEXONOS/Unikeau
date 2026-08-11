@@ -73,6 +73,7 @@
       dtls.forEach(function (d) { d.classList.toggle('is-active', parseInt(d.getAttribute('data-i'), 10) === i); });
       mvs.forEach(function (m) { m.classList.toggle('is-active', parseInt(m.getAttribute('data-i'), 10) === i); });
       if (uv) uv.classList.toggle('is-active', i === 4);
+      lab.classList.toggle('is-uv', i === 4);
       if (tag) tag.textContent = 'SCAN · ' + codes[i];
       if (idxEl) idxEl.textContent = ('0' + (i + 1)).slice(-2);
       if (doScan) scan();
@@ -119,6 +120,24 @@
     frame();
   })();
 
+  /* ---- Tarifs : bascule Location / Achat ---- */
+  (function () {
+    var seg = document.getElementById('priceSeg');
+    if (!seg) return;
+    var btns = { location: document.getElementById('segLocation'), achat: document.getElementById('segAchat') };
+    var panes = { location: document.getElementById('modeLocation'), achat: document.getElementById('modeAchat') };
+    function setMode(mode) {
+      seg.setAttribute('data-mode', mode);
+      Object.keys(btns).forEach(function (k) {
+        var on = k === mode;
+        if (btns[k]) { btns[k].classList.toggle('is-on', on); btns[k].setAttribute('aria-selected', on ? 'true' : 'false'); }
+        if (panes[k]) { panes[k].classList.toggle('is-on', on); panes[k].hidden = !on; }
+      });
+    }
+    if (btns.location) btns.location.addEventListener('click', function () { setMode('location'); });
+    if (btns.achat) btns.achat.addEventListener('click', function () { setMode('achat'); });
+  })();
+
   /* ---- Fiches modèles ---- */
   document.querySelectorAll('[data-card]').forEach(function (card) {
     var toggle = card.querySelector('.mcard__toggle');
@@ -132,7 +151,7 @@
 
   /* ---- Apparition au scroll ---- */
   var targets = document.querySelectorAll(
-    '.hero__copy > *, .hero__visual, .shead, .cpanel, .compare__arrow, .mcard, .realstrip, .step, .plan, .plans__note, .law, .qa, .cta'
+    '.hero__copy > *, .hero__visual, .shead, .cpanel, .compare__arrow, .mcard, .realstrip, .step, .seg, .plan, .buynote, .plans__note, .law__card, .qa, .cta'
   );
   if (reduced || !('IntersectionObserver' in window)) {
     targets.forEach(function (el) { el.classList.add('in'); });
