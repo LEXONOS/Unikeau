@@ -358,7 +358,7 @@ button{font:inherit;cursor:pointer;background:none;border:0;padding:0;color:inhe
 .section--deep .eyebrow::before,.section--deep .shead--center .eyebrow::after{background:linear-gradient(90deg,var(--cyan),var(--cyan-l))}
 
 .labscroll.is-scrolly{height:420vh}
-.labscroll.is-scrolly .labsticky{position:sticky;top:84px}
+.labscroll.is-scrolly .labsticky{position:sticky;top:118px}
 
 .lab{
   --acc:#1E86D6;
@@ -493,24 +493,63 @@ button{font:inherit;cursor:pointer;background:none;border:0;padding:0;color:inhe
   background:color-mix(in srgb,var(--c,#46CDEF) 14%,transparent);
   border-radius:999px;padding:8px 14px;
 }
-.lab__rail{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
-.rseg button{
-  width:100%;display:flex;flex-direction:column;gap:4px;align-items:flex-start;
-  padding:12px 13px;border-radius:var(--r-sm);
-  background:rgba(10,31,53,.6);border:1px solid rgba(143,212,245,.13);
-  transition:border-color .25s,background .25s,transform .25s;
+.dtl__meta{
+  margin-top:12px;font-family:var(--f-mono);font-size:11.5px;letter-spacing:.06em;
+  color:#6E8CA8;display:flex;align-items:center;gap:8px;
 }
-.rseg button:hover{transform:translateY(-2px);border-color:color-mix(in srgb,var(--c) 60%,transparent)}
-.rseg__no{font-family:var(--f-mono);font-size:10.5px;color:#6E8CA8;letter-spacing:.1em}
-.rseg__code{font-family:var(--f-display);font-weight:700;font-size:14.5px;color:#C6D9EA}
-.rseg.is-active button{
-  background:color-mix(in srgb,var(--c) 20%, rgba(10,31,53,.6));
-  border-color:color-mix(in srgb,var(--c) 65%, transparent);
+.dtl__meta::before{content:"";width:14px;height:1px;background:#3A5570}
+/* Pipeline : le circuit de l'eau */
+.pipe{
+  position:relative;margin-bottom:24px;
+  display:grid;grid-template-columns:auto repeat(5,1fr) auto;align-items:start;
 }
-.rseg.is-active .rseg__no{color:color-mix(in srgb,var(--c) 80%,#fff)}
-.rseg.is-active .rseg__code{color:#fff}
-.lab__track{height:3px;border-radius:3px;background:rgba(143,212,245,.14);overflow:hidden}
-.lab__track span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--blue),var(--cyan));transition:width .2s linear}
+.pipe__tube{
+  position:absolute;left:26px;right:26px;top:25px;height:6px;border-radius:6px;
+  background:rgba(143,212,245,.13);
+  box-shadow:inset 0 1px 2px rgba(0,0,0,.4);
+  overflow:hidden;
+}
+.pipe__tube span{
+  display:block;height:100%;width:0;border-radius:6px;
+  background:linear-gradient(90deg,var(--blue) 0%,var(--cyan) 70%,var(--cyan-l) 100%);
+  box-shadow:0 0 12px rgba(46,167,230,.8);
+  transition:width .15s linear;
+}
+.pipe__cap,.pnode{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:9px}
+.pnode button{display:flex;flex-direction:column;align-items:center;gap:9px}
+.pipe__dot{
+  width:56px;height:56px;border-radius:50%;display:grid;place-items:center;
+  background:#0A1F35;border:1.5px solid rgba(143,212,245,.22);
+  color:#7E9CB8;transition:border-color .3s,background .3s,color .3s,box-shadow .3s,transform .3s var(--ease);
+}
+.pipe__dot b{font-family:var(--f-display);font-weight:700;font-size:13.5px;letter-spacing:.01em}
+.pipe__dot--cap{width:52px;height:52px;color:#5F7E9C}
+.pipe__lbl{
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+  font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;color:#5F7E9C;text-transform:uppercase;
+}
+.pipe__lbl i{font-style:normal;font-size:9.5px;color:#416080}
+.pnode.is-done .pipe__dot{
+  background:color-mix(in srgb,var(--c) 26%,#0A1F35);
+  border-color:color-mix(in srgb,var(--c) 70%,transparent);
+  color:#EAF6FF;
+}
+.pnode.is-active .pipe__dot{
+  background:color-mix(in srgb,var(--c) 34%,#0A1F35);
+  border-color:var(--c);color:#fff;transform:scale(1.12);
+  box-shadow:0 0 0 5px color-mix(in srgb,var(--c) 22%,transparent), 0 0 24px color-mix(in srgb,var(--c) 55%,transparent);
+}
+.pnode.is-active .pipe__lbl{color:#DCEDF9}
+.pnode.is-active .pipe__lbl i{color:color-mix(in srgb,var(--c) 80%,#fff)}
+.pnode button:hover .pipe__dot{border-color:color-mix(in srgb,var(--c) 70%,transparent);transform:scale(1.06)}
+.pipe__dot--out.is-live{border-color:var(--cyan);color:#fff;box-shadow:0 0 18px rgba(46,167,230,.55)}
+@media (prefers-reduced-motion:no-preference){
+  .pnode.is-active .pipe__dot{animation:nodepulse 2.4s ease-in-out infinite}
+  @keyframes nodepulse{
+    0%,100%{box-shadow:0 0 0 5px color-mix(in srgb,var(--c) 22%,transparent), 0 0 24px color-mix(in srgb,var(--c) 55%,transparent)}
+    50%{box-shadow:0 0 0 9px color-mix(in srgb,var(--c) 12%,transparent), 0 0 34px color-mix(in srgb,var(--c) 70%,transparent)}
+  }
+}
 
 .realstrip{
   margin-top:64px;display:grid;grid-template-columns:220px 1fr;gap:34px;align-items:center;
@@ -737,10 +776,16 @@ button{font:inherit;cursor:pointer;background:none;border:0;padding:0;color:inhe
   .compare__arrow{transform:rotate(90deg);margin-inline:auto}
   .models{grid-template-columns:1fr}
   .lab{grid-template-columns:1fr}
-  .lab__stage{min-height:420px}
+  .lab__stage{min-height:400px}
+  .pipe__dot{width:44px;height:44px}
+  .pipe__dot b{font-size:11.5px}
+  .pipe__dot--cap{width:40px;height:40px}
+  .pipe__cap .pipe__lbl,.pipe__lbl{font-size:9.5px}
+  .pipe__lbl i{display:none}
+  .pipe__tube{top:19px;left:20px;right:20px}
   .lab__panel{min-height:0}
   .lab__detail{min-height:280px}
-  .labscroll.is-scrolly .labsticky{top:70px}
+  .labscroll.is-scrolly .labsticky{top:88px}
   .steps{grid-template-columns:1fr 1fr}
   .plans{grid-template-columns:1fr}
   .law{grid-template-columns:1fr}
@@ -751,6 +796,19 @@ button{font:inherit;cursor:pointer;background:none;border:0;padding:0;color:inhe
 }
 @media (max-width:640px){
   body{font-size:16px}
+  .pipe__lbl{display:none}
+  .pnode.is-active .pipe__lbl{display:flex}
+  .pipe__dot{width:40px;height:40px}
+  .pipe__dot b{font-size:10.5px}
+  .pipe__dot--cap{width:36px;height:36px}
+  .pipe__tube{top:17px;left:18px;right:18px;height:5px}
+  .lab__stage{min-height:250px}
+  .lab__detail{min-height:0}
+  .dtl{position:static;opacity:1;transform:none;display:none;padding:26px;justify-content:flex-start}
+  .dtl.is-active{display:flex}
+  .dtl__name{font-size:26px}
+  .dtl__desc{font-size:15px}
+  .lab__drag{display:none}
   .steps{grid-template-columns:1fr}
   .tap--hot{right:-6px}
   .tap--cold{left:-6px}

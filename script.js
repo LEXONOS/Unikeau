@@ -46,7 +46,8 @@
     var lab = document.getElementById('lab');
     var scroller = document.getElementById('labScroll');
     if (!lab || !scroller) return;
-    var segs = Array.prototype.slice.call(lab.querySelectorAll('.rseg'));
+    var segs = Array.prototype.slice.call(document.querySelectorAll('#pipe .pnode'));
+    var tapOut = document.querySelector('.pipe__dot--out');
     var dtls = Array.prototype.slice.call(lab.querySelectorAll('.dtl'));
     var mvs = Array.prototype.slice.call(lab.querySelectorAll('.mv'));
     var uv = lab.querySelector('.uvstage');
@@ -69,7 +70,11 @@
       if (i === idx) return;
       idx = i;
       lab.style.setProperty('--acc', accents[i] || accents[0]);
-      segs.forEach(function (s) { s.classList.toggle('is-active', parseInt(s.getAttribute('data-i'), 10) === i); });
+      segs.forEach(function (s) {
+        var si = parseInt(s.getAttribute('data-i'), 10);
+        s.classList.toggle('is-active', si === i);
+        s.classList.toggle('is-done', si < i);
+      });
       dtls.forEach(function (d) { d.classList.toggle('is-active', parseInt(d.getAttribute('data-i'), 10) === i); });
       mvs.forEach(function (m) { m.classList.toggle('is-active', parseInt(m.getAttribute('data-i'), 10) === i); });
       if (uv) uv.classList.toggle('is-active', i === 4);
@@ -107,6 +112,7 @@
       var p = total > 0 ? (-rect.top) / total : 0;
       p = p < 0 ? 0 : (p > 1 ? 1 : p);
       if (bar) bar.style.width = (p * 100) + '%';
+      if (tapOut) tapOut.classList.toggle('is-live', p > 0.98);
       var i = Math.floor(p * N);
       if (i > N - 1) i = N - 1;
       if (i < 0) i = 0;

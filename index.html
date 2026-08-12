@@ -290,6 +290,33 @@
   <div class="labscroll" id="labScroll">
     <div class="labsticky">
       <div class="wrap">
+        <div class="pipe" id="pipe">
+          <div class="pipe__tube" aria-hidden="true"><span id="labBar"></span></div>
+          <span class="pipe__cap">
+            <span class="pipe__dot pipe__dot--cap"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.7 5.6 9a7 7 0 1 0 12.8 0L12 2.7z"/></svg></span>
+            <span class="pipe__lbl">Réseau</span>
+          </span>
+          <span class="pnode is-active" data-i="0" style="--c:#1E86D6">
+            <button type="button" aria-label="Étape 01 : PP, sédiments"><span class="pipe__dot"><b>PP</b></span><span class="pipe__lbl"><i>01</i>Sédiments</span></button>
+          </span>
+          <span class="pnode" data-i="1" style="--c:#E8792B">
+            <button type="button" aria-label="Étape 02 : GAC, charbon actif"><span class="pipe__dot"><b>GAC</b></span><span class="pipe__lbl"><i>02</i>Charbon</span></button>
+          </span>
+          <span class="pnode" data-i="2" style="--c:#2FA84F">
+            <button type="button" aria-label="Étape 03 : UF, ultrafiltration"><span class="pipe__dot"><b>UF</b></span><span class="pipe__lbl"><i>03</i>Membrane</span></button>
+          </span>
+          <span class="pnode" data-i="3" style="--c:#D6236B">
+            <button type="button" aria-label="Étape 04 : T33, post-charbon"><span class="pipe__dot"><b>T33</b></span><span class="pipe__lbl"><i>04</i>Affinage</span></button>
+          </span>
+          <span class="pnode" data-i="4" style="--c:#46CDEF">
+            <button type="button" aria-label="Étape 05 : lampe UV"><span class="pipe__dot"><b>UV</b></span><span class="pipe__lbl"><i>05</i>Lumière</span></button>
+          </span>
+          <span class="pipe__cap">
+            <span class="pipe__dot pipe__dot--cap pipe__dot--out"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h10a3 3 0 0 1 3 3v1"/><path d="M4 8v8"/><path d="M17 20v1"/><path d="M8 8V6a3 3 0 0 1 3-3h8"/></svg></span>
+            <span class="pipe__lbl">Robinet</span>
+          </span>
+        </div>
+
         <div class="lab" id="lab" style="--acc:#1E86D6">
           <div class="lab__stage">
             <span class="lab__grid" aria-hidden="true"></span>
@@ -331,50 +358,37 @@
                 <h3 class="dtl__name">PP <em>Sédiments</em></h3>
                 <p class="dtl__desc">Une fibre de polypropylène bobinée arrête tout ce qui se voit : sable, rouille, particules du réseau. Elle encaisse en premier et protège les trois cartouches suivantes.</p>
                 <span class="dtl__spec">Sable · rouille · particules</span>
+                <span class="dtl__meta">Cartouche 01 · remplacée à chaque entretien</span>
               </article>
               <article class="dtl" data-i="1" style="--c:#E8792B">
                 <p class="dtl__step">Étape 02 / 05</p>
                 <h3 class="dtl__name">GAC <em>Charbon actif</em></h3>
                 <p class="dtl__desc">Des grains de charbon actif captent le chlore, les odeurs et les mauvais goûts. C'est ici que l'eau du robinet change vraiment de goût.</p>
                 <span class="dtl__spec">Chlore · odeurs · goûts</span>
+                <span class="dtl__meta">Cartouche 02 · remplacée à chaque entretien</span>
               </article>
               <article class="dtl" data-i="2" style="--c:#2FA84F">
                 <p class="dtl__step">Étape 03 / 05</p>
                 <h3 class="dtl__name">UF <em>Ultrafiltration</em></h3>
                 <p class="dtl__desc">Une membrane aux pores des milliers de fois plus fins qu'un cheveu. Elle retient les bactéries et les impuretés microscopiques, tout en laissant passer les minéraux de l'eau.</p>
                 <span class="dtl__spec">Bactéries · micro-impuretés</span>
+                <span class="dtl__meta">Cartouche 03 · remplacée à chaque entretien</span>
               </article>
               <article class="dtl" data-i="3" style="--c:#D6236B">
                 <p class="dtl__step">Étape 04 / 05</p>
                 <h3 class="dtl__name">T33 <em>Post-charbon</em></h3>
                 <p class="dtl__desc">Un dernier lit de charbon polit le goût juste avant la sortie. C'est la touche finale, celle qui rend l'eau vraiment agréable à boire.</p>
                 <span class="dtl__spec">Affinage du goût · dernière étape</span>
+                <span class="dtl__meta">Cartouche 04 · remplacée à chaque entretien</span>
               </article>
               <article class="dtl" data-i="4" style="--c:#46CDEF">
                 <p class="dtl__step">Étape 05 / 05</p>
                 <h3 class="dtl__name">Lampe UV <em>Désinfection</em></h3>
                 <p class="dtl__desc">Sur la colonne, une lampe UV neutralise en continu les micro-organismes qui passeraient les cartouches. Aucun produit ajouté, aucune odeur : juste de la lumière.</p>
                 <span class="dtl__spec">Micro-organismes · zéro produit chimique</span>
+                <span class="dtl__meta">Colonne uniquement · intégrée au réservoir</span>
               </article>
             </div>
-            <ol class="lab__rail" id="labRail" aria-label="Étapes de filtration">
-              <li class="rseg is-active" data-i="0" style="--c:#1E86D6">
-                <button type="button" aria-label="Étape 01 : PP"><span class="rseg__no">01</span><span class="rseg__code">PP</span></button>
-              </li>
-              <li class="rseg" data-i="1" style="--c:#E8792B">
-                <button type="button" aria-label="Étape 02 : GAC"><span class="rseg__no">02</span><span class="rseg__code">GAC</span></button>
-              </li>
-              <li class="rseg" data-i="2" style="--c:#2FA84F">
-                <button type="button" aria-label="Étape 03 : UF"><span class="rseg__no">03</span><span class="rseg__code">UF</span></button>
-              </li>
-              <li class="rseg" data-i="3" style="--c:#D6236B">
-                <button type="button" aria-label="Étape 04 : T33"><span class="rseg__no">04</span><span class="rseg__code">T33</span></button>
-              </li>
-              <li class="rseg" data-i="4" style="--c:#46CDEF">
-                <button type="button" aria-label="Étape 05 : Lampe UV"><span class="rseg__no">05</span><span class="rseg__code">UV</span></button>
-              </li>
-            </ol>
-            <div class="lab__track" aria-hidden="true"><span id="labBar"></span></div>
           </div>
         </div>
       </div>
