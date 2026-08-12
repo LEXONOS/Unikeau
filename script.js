@@ -41,24 +41,22 @@
   window.addEventListener('scroll', onScroll, { passive: true });
   window.addEventListener('resize', onScroll, { passive: true });
 
-  /* ---- Filtration : séquence pilotée par le scroll ---- */
+  /* ---- Filtration : navigation par étapes (boutons et circuit cliquable) ---- */
   (function () {
     var lab = document.getElementById('lab');
-    var scroller = document.getElementById('labScroll');
-    if (!lab || !scroller) return;
+    if (!lab) return;
     var segs = Array.prototype.slice.call(document.querySelectorAll('#pipe .pnode'));
-    var tapOut = document.querySelector('.pipe__dot--out');
-    var navEl = document.getElementById('nav');
     var dtls = Array.prototype.slice.call(lab.querySelectorAll('.dtl'));
     var mvs = Array.prototype.slice.call(lab.querySelectorAll('.mv'));
     var uv = lab.querySelector('.uvstage');
     var bar = document.getElementById('labBar');
+    var tapOut = document.querySelector('.pipe__dot--out');
     var tag = document.getElementById('labTag');
     var idxEl = document.getElementById('labIdx');
     var accents = ['#1E86D6', '#E8792B', '#2FA84F', '#D6236B', '#46CDEF'];
     var codes = ['PP', 'GAC', 'UF', 'T33', 'UV'];
     var N = segs.length || 5;
-    var idx = -1, scanT = null, ticking = false;
+    var idx = -1, scanT = null;
 
     function scan() {
       lab.classList.remove('scanning');
@@ -79,53 +77,24 @@
       dtls.forEach(function (d) { d.classList.toggle('is-active', parseInt(d.getAttribute('data-i'), 10) === i); });
       mvs.forEach(function (m) { m.classList.toggle('is-active', parseInt(m.getAttribute('data-i'), 10) === i); });
       if (uv) uv.classList.toggle('is-active', i === 4);
-      lab.classList.toggle('is-uv', i === 4);
       if (tag) tag.textContent = 'SCAN · ' + codes[i];
       if (idxEl) idxEl.textContent = ('0' + (i + 1)).slice(-2);
+      if (bar) bar.style.width = ((i + 1) / N) * 100 + '%';
+      if (tapOut) tapOut.classList.toggle('is-live', i === N - 1);
       if (doScan) scan();
     }
+    function go(i) { paint((i % N + N) % N, true); }
 
-    // Étapes cliquables : sauter à la position de scroll correspondante
     segs.forEach(function (s) {
       var btn = s.querySelector('button');
-      if (!btn) return;
-      btn.addEventListener('click', function () {
-        var i = parseInt(s.getAttribute('data-i'), 10);
-        if (scroller.classList.contains('is-scrolly')) {
-          var total = scroller.offsetHeight - window.innerHeight;
-          var target = scroller.offsetTop + total * ((i + 0.5) / N);
-          window.scrollTo({ top: target, behavior: reduced ? 'auto' : 'smooth' });
-        } else {
-          paint(i, true);
-          if (bar) bar.style.width = ((i + 1) / N) * 100 + '%';
-        }
-      });
+      if (btn) btn.addEventListener('click', function () { go(parseInt(s.getAttribute('data-i'), 10)); });
     });
+    var prev = document.getElementById('labPrev');
+    var next = document.getElementById('labNext');
+    if (prev) prev.addEventListener('click', function () { go(idx - 1); });
+    if (next) next.addEventListener('click', function () { go(idx + 1); });
 
-    // Mode replié (mouvement réduit / pas de scrollytelling) : première étape figée
-    if (reduced) { paint(0, false); if (bar) bar.style.width = (100 / N) + '%'; return; }
-
-    scroller.classList.add('is-scrolly');
-
-    function frame() {
-      var rect = scroller.getBoundingClientRect();
-      var total = scroller.offsetHeight - window.innerHeight;
-      var p = total > 0 ? (-rect.top) / total : 0;
-      p = p < 0 ? 0 : (p > 1 ? 1 : p);
-      if (navEl) navEl.classList.toggle('is-hidden', rect.top < 90 && rect.bottom > window.innerHeight * 0.6);
-      if (bar) bar.style.width = (p * 100) + '%';
-      if (tapOut) tapOut.classList.toggle('is-live', p > 0.98);
-      var i = Math.floor(p * N);
-      if (i > N - 1) i = N - 1;
-      if (i < 0) i = 0;
-      paint(i, true);
-      ticking = false;
-    }
-    function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(frame); } }
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll, { passive: true });
     paint(0, false);
-    frame();
   })();
 
   /* ---- Tarifs : bascule Location / Achat ---- */
@@ -146,16 +115,59 @@
     if (btns.achat) btns.achat.addEventListener('click', function () { setMode('achat'); });
   })();
 
-  /* ---- Fiches modèles ---- */
-  document.querySelectorAll('[data-card]').forEach(function (card) {
-    var toggle = card.querySelector('.mcard__toggle');
-    if (!toggle) return;
-    toggle.addEventListener('click', function () {
-      var open = card.classList.toggle('is-open');
-      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
-      toggle.querySelector('span').textContent = open ? 'Masquer' : 'Caractéristiques';
+  /* ---- Fiches modèles : mode focus ---- */
+  (function () {
+    var grid = document.querySelector('.models');
+    if (!grid) return;
+    var cards = Array.prototype.slice.call(grid.querySelectorAll('[data-card]'));
+    function closeAll() {
+      grid.classList.remove('has-open');
+      cards.forEach(function (c) {
+        c.classList.remove('is-open', 'is-dim');
+        var t = c.querySelector('.mcard__toggle');
+        if (t) { t.setAttribute('aria-expanded', 'false'); t.querySelector('span').textContent = 'Caractéristiques'; }
+      });
+    }
+    cards.forEach(function (card) {
+      var toggle = card.querySelector('.mcard__toggle');
+      if (toggle) toggle.addEventListener('click', function (e) {
+        e.stopPropagation();
+        var wasOpen = card.classList.contains('is-open');
+        closeAll();
+        if (!wasOpen) {
+          grid.classList.add('has-open');
+          card.classList.add('is-open');
+          toggle.setAttribute('aria-expanded', 'true');
+          toggle.querySelector('span').textContent = 'Masquer';
+          cards.forEach(function (c) { if (c !== card) c.classList.add('is-dim'); });
+          setTimeout(function () { card.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'nearest' }); }, 60);
+        }
+      });
+      card.addEventListener('click', function () {
+        if (!card.classList.contains('is-dim')) return;
+        var t = card.querySelector('.mcard__toggle');
+        if (t) t.click();
+      });
     });
-  });
+  })();
+
+  /* ---- Tarifs : un plan en grand au toucher (petits écrans) ---- */
+  (function () {
+    var mq = window.matchMedia('(max-width: 700px)');
+    Array.prototype.forEach.call(document.querySelectorAll('.plans'), function (wrap) {
+      var plans = Array.prototype.slice.call(wrap.querySelectorAll('.plan'));
+      plans.forEach(function (p) {
+        p.addEventListener('click', function (e) {
+          if (!mq.matches) return;
+          if (e.target.closest('a')) return;
+          var was = p.classList.contains('is-x');
+          plans.forEach(function (o) { o.classList.remove('is-x'); });
+          wrap.classList.toggle('has-x', !was);
+          if (!was) p.classList.add('is-x');
+        });
+      });
+    });
+  })();
 
   /* ---- Apparition au scroll ---- */
   var targets = document.querySelectorAll(
