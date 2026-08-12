@@ -48,6 +48,7 @@
     if (!lab || !scroller) return;
     var segs = Array.prototype.slice.call(document.querySelectorAll('#pipe .pnode'));
     var tapOut = document.querySelector('.pipe__dot--out');
+    var navEl = document.getElementById('nav');
     var dtls = Array.prototype.slice.call(lab.querySelectorAll('.dtl'));
     var mvs = Array.prototype.slice.call(lab.querySelectorAll('.mv'));
     var uv = lab.querySelector('.uvstage');
@@ -111,6 +112,7 @@
       var total = scroller.offsetHeight - window.innerHeight;
       var p = total > 0 ? (-rect.top) / total : 0;
       p = p < 0 ? 0 : (p > 1 ? 1 : p);
+      if (navEl) navEl.classList.toggle('is-hidden', rect.top < 90 && rect.bottom > window.innerHeight * 0.6);
       if (bar) bar.style.width = (p * 100) + '%';
       if (tapOut) tapOut.classList.toggle('is-live', p > 0.98);
       var i = Math.floor(p * N);
