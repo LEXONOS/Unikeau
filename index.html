@@ -170,7 +170,7 @@
     <div class="hero__inner">
       <div class="hero__copy">
         <p class="eyebrow hero__eyebrow">Guadeloupe · pros et particuliers</p>
-        <h1>L'eau illimitée,<br><em>sans bonbonne.</em></h1>
+        <h1>L'eau <span class="rot" aria-hidden="true"><span class="rot__list"><i>froide,</i><i>chaude,</i><i>tempérée,</i><i>illimitée,</i><i>froide,</i></span></span><span class="visually-hidden">illimitée,</span><br>sans bonbonne.</h1>
         <p class="hero__lead">La fontaine se branche sur votre arrivée d'eau, filtre en quatre étapes et sert une eau froide, tempérée ou chaude, à volonté. Nous l'installons chez vous et nous revenons changer les filtres. Les bonbonnes, c'est terminé.</p>
         <div class="hero__cta">
           <a class="btn btn--wa" href="https://wa.me/590690342476?text=Bonjour%20UNIK'EAU%2C%20j'aimerais%20un%20devis%20pour%20une%20fontaine%20%C3%A0%20eau." target="_blank" rel="noopener">
@@ -188,9 +188,14 @@
 
       <div class="hero__visual">
         <div class="stage">
-          <div class="stage__frame">
-            <span class="stage__badge"><i></i>Installée en Guadeloupe</span>
-            <img class="stage__img" src="assets/fontaine-grande.webp" alt="Fontaine à eau sur réseau UNIK'EAU en Guadeloupe, modèle colonne gris et noir avec leviers eau chaude, tempérée et froide" width="529" height="1216" fetchpriority="high">
+          <span class="stage__ring" aria-hidden="true"></span>
+          <span class="stage__ring stage__ring--2" aria-hidden="true"></span>
+          <div class="stage__frame" id="stageTilt">
+            <span class="stage__badge"><i></i>Installées en Guadeloupe</span>
+            <div class="duo">
+              <img class="duo__col" src="assets/fontaine-grande.webp" alt="Fontaine à eau sur réseau UNIK'EAU en Guadeloupe, modèle colonne gris et noir avec leviers eau chaude, tempérée et froide" width="529" height="1216" fetchpriority="high">
+              <img class="duo__ctr" src="assets/fontaine-petite-noire.webp" alt="Fontaine à eau de comptoir UNIK'EAU noire posée devant la colonne" width="644" height="930" fetchpriority="high">
+            </div>
           </div>
           <span class="tap tap--hot"><i></i><span><b>Eau chaude</b><small>≥ 90 °C</small></span></span>
           <span class="tap tap--cold"><i></i><span><b>Eau froide</b><small>≤ 10 °C</small></span></span>

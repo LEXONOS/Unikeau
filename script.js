@@ -115,6 +115,27 @@
     if (btns.achat) btns.achat.addEventListener('click', function () { setMode('achat'); });
   })();
 
+  /* ---- Héros : inclinaison de la scène au mouvement de souris ---- */
+  (function () {
+    var frame = document.getElementById('stageTilt');
+    var hero = document.getElementById('top');
+    if (!frame || !hero || reduced) return;
+    if (!window.matchMedia('(pointer: fine)').matches) return;
+    var raf = null, tx = 0, ty = 0;
+    hero.addEventListener('mousemove', function (e) {
+      var r = frame.getBoundingClientRect();
+      tx = ((e.clientX - (r.left + r.width / 2)) / r.width) * 5;
+      ty = ((e.clientY - (r.top + r.height / 2)) / r.height) * -4;
+      if (!raf) raf = requestAnimationFrame(function () {
+        frame.style.transform = 'rotateY(' + tx.toFixed(2) + 'deg) rotateX(' + ty.toFixed(2) + 'deg)';
+        raf = null;
+      });
+    });
+    hero.addEventListener('mouseleave', function () {
+      frame.style.transform = '';
+    });
+  })();
+
   /* ---- Fiches modèles : mode focus ---- */
   (function () {
     var grid = document.querySelector('.models');
