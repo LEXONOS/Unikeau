@@ -151,6 +151,20 @@
     });
   })();
 
+  /* ---- Modèles : sélecteur de coloris ---- */
+  Array.prototype.forEach.call(document.querySelectorAll('[data-card]'), function (card) {
+    var sws = Array.prototype.slice.call(card.querySelectorAll('.sw'));
+    var imgs = Array.prototype.slice.call(card.querySelectorAll('.vimg'));
+    sws.forEach(function (sw) {
+      sw.addEventListener('click', function (e) {
+        e.stopPropagation();
+        var v = sw.getAttribute('data-v');
+        sws.forEach(function (o) { o.classList.toggle('is-on', o === sw); });
+        imgs.forEach(function (im) { im.classList.toggle('is-on', im.getAttribute('data-v') === v); });
+      });
+    });
+  });
+
   /* ---- Tarifs : un plan en grand au toucher (petits écrans) ---- */
   (function () {
     var mq = window.matchMedia('(max-width: 700px)');
