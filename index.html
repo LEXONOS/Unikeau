@@ -5,20 +5,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
 <!-- ═══════════════════════════════════════════════════════════════
-     UNIK'EAU — marque de O'ELEC (SAS) — Guadeloupe — v3
+     UNIK'EAU, marque de O'ELEC (SAS), Guadeloupe, v3
      À MODIFIER AVANT MISE EN LIGNE : cherche "A-MODIFIER" dans ce fichier
      ═══════════════════════════════════════════════════════════════ -->
 
-<title>UNIK'EAU — Fontaine à eau sur réseau en Guadeloupe | Location ou achat, sans bonbonne</title>
-<meta name="description" content="Fontaine à eau raccordée au réseau en Guadeloupe : eau froide, tempérée et chaude en illimité, sans bonbonne. Location tout compris dès 50 € TTC/mois ou achat dès 699 € TTC. Installation et entretien par nos soins.">
+<title>Fontaine à eau en Guadeloupe, location ou achat sans bonbonne | UNIK'EAU</title>
+<meta name="description" content="Fontaines à eau branchées sur le réseau, installées et entretenues dans toute la Guadeloupe. Location tout compris dès 50 € par mois, achat dès 699 €. Eau froide, tempérée ou chaude, sans bonbonne à porter. Devis rapide sur WhatsApp.">
 <link rel="canonical" href="https://fontaine-guadeloupe.fr/">
 <meta name="theme-color" content="#F2F7FB">
 
 <meta property="og:type" content="website">
 <meta property="og:locale" content="fr_FR">
 <meta property="og:site_name" content="UNIK'EAU">
-<meta property="og:title" content="UNIK'EAU — Fontaine à eau sur réseau en Guadeloupe">
-<meta property="og:description" content="L'eau du réseau, filtrée et illimitée. Sans bonbonne. Location tout compris ou achat, installée partout en Guadeloupe.">
+<meta property="og:title" content="Fontaine à eau en Guadeloupe, sans bonbonne | UNIK'EAU">
+<meta property="og:description" content="L'eau du réseau, filtrée en quatre étapes et servie froide, tempérée ou chaude. Location tout compris ou achat, installation et entretien partout en Guadeloupe.">
 <meta property="og:url" content="https://fontaine-guadeloupe.fr/">
 <meta property="og:image" content="https://fontaine-guadeloupe.fr/assets/og-image.jpg">
 <meta name="twitter:card" content="summary_large_image">
@@ -29,37 +29,95 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="assets/fontaine-grande.webp" fetchpriority="high">
 <link rel="stylesheet" href="styles.css">
 <script type="module" src="assets/vendor/model-viewer.min.js"></script>
 
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "LocalBusiness",
-  "name": "UNIK'EAU",
-  "legalName": "O'ELEC",
-  "description": "Location, vente, installation et entretien de fontaines à eau raccordées au réseau en Guadeloupe.",
-  "url": "https://fontaine-guadeloupe.fr/",
-  "logo": "https://fontaine-guadeloupe.fr/assets/logo-unikeau.webp",
-  "image": "https://fontaine-guadeloupe.fr/assets/og-image.jpg",
-  "telephone": "+590690342476",
-  "email": "contact@fontaine-guadeloupe.fr",
-  "priceRange": "€€",
-  "address": {
-    "@type": "PostalAddress",
-    "streetAddress": "Houelbourg, Immeuble SCI Sud Jarry",
-    "addressLocality": "Baie-Mahault",
-    "postalCode": "97122",
-    "addressRegion": "Guadeloupe",
-    "addressCountry": "GP"
-  },
-  "areaServed": { "@type": "AdministrativeArea", "name": "Guadeloupe" },
-  "sameAs": ["https://www.facebook.com/unikeau/"],
-  "makesOffer": [
-    { "@type": "Offer", "name": "Location fontaine de comptoir, entretien compris", "price": "50", "priceCurrency": "EUR" },
-    { "@type": "Offer", "name": "Location fontaine colonne, entretien compris", "price": "70", "priceCurrency": "EUR" },
-    { "@type": "Offer", "name": "Achat fontaine de comptoir", "price": "699", "priceCurrency": "EUR" },
-    { "@type": "Offer", "name": "Achat fontaine colonne UNIK-105L-UF", "price": "799", "priceCurrency": "EUR" }
+  "@graph": [
+    {
+      "@type": "LocalBusiness",
+      "@id": "https://fontaine-guadeloupe.fr/#entreprise",
+      "name": "UNIK'EAU",
+      "legalName": "O'ELEC",
+      "description": "Location, vente, installation et entretien de fontaines à eau raccordées au réseau en Guadeloupe.",
+      "url": "https://fontaine-guadeloupe.fr/",
+      "logo": "https://fontaine-guadeloupe.fr/assets/logo-unikeau.webp",
+      "image": "https://fontaine-guadeloupe.fr/assets/og-image.jpg",
+      "telephone": "+590690342476",
+      "email": "contact@fontaine-guadeloupe.fr",
+      "priceRange": "€€",
+      "vatID": "FR32921001459",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Houelbourg, Immeuble SCI Sud Jarry",
+        "addressLocality": "Baie-Mahault",
+        "postalCode": "97122",
+        "addressRegion": "Guadeloupe",
+        "addressCountry": "GP"
+      },
+      "areaServed": { "@type": "AdministrativeArea", "name": "Guadeloupe" },
+      "sameAs": ["https://www.facebook.com/unikeau/"]
+    },
+    {
+      "@type": "Product",
+      "name": "Fontaine à eau colonne UNIK-105L-UF",
+      "brand": { "@type": "Brand", "name": "UNIK'EAU" },
+      "description": "Fontaine à eau sur réseau, format colonne. Eau froide, tempérée et chaude, filtration quatre étapes et lampe UV dans le réservoir.",
+      "image": "https://fontaine-guadeloupe.fr/assets/fontaine-grande.webp",
+      "offers": [
+        { "@type": "Offer", "name": "Achat", "price": "799", "priceCurrency": "EUR", "availability": "https://schema.org/InStock", "url": "https://fontaine-guadeloupe.fr/#tarifs" },
+        { "@type": "Offer", "name": "Location mensuelle, entretien compris", "price": "50", "priceCurrency": "EUR", "url": "https://fontaine-guadeloupe.fr/#tarifs" }
+      ]
+    },
+    {
+      "@type": "Product",
+      "name": "Fontaine à eau de comptoir UNIK'EAU",
+      "brand": { "@type": "Brand", "name": "UNIK'EAU" },
+      "description": "Fontaine à eau sur réseau, format compact à poser. Eau froide et chaude, filtration quatre étapes identique à la colonne.",
+      "image": "https://fontaine-guadeloupe.fr/assets/fontaine-petite.webp",
+      "offers": [
+        { "@type": "Offer", "name": "Achat", "price": "699", "priceCurrency": "EUR", "availability": "https://schema.org/InStock", "url": "https://fontaine-guadeloupe.fr/#tarifs" },
+        { "@type": "Offer", "name": "Location mensuelle, entretien compris", "price": "50", "priceCurrency": "EUR", "url": "https://fontaine-guadeloupe.fr/#tarifs" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Location ou achat : comment choisir ?",
+          "acceptedAnswer": { "@type": "Answer", "text": "La location est la formule sans souci : une mensualité fixe qui couvre la fontaine, l'installation, l'entretien, les cartouches et la garantie pendant toute la durée du contrat. L'achat convient si vous préférez que la machine vous appartienne : vous payez la fontaine et l'installation une fois, puis l'entretien au contrat. En cas de doute, écrivez-nous sur WhatsApp avec votre situation, on vous dira ce qui revient le moins cher." }
+        },
+        {
+          "@type": "Question",
+          "name": "Qu'est-ce qu'il faut prévoir chez moi ?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Une arrivée d'eau potable et une prise électrique à proximité de l'emplacement choisi. C'est tout : notre technicien apporte le reste, accessoires de raccordement compris." }
+        },
+        {
+          "@type": "Question",
+          "name": "L'eau est-elle vraiment bonne à boire ?",
+          "acceptedAnswer": { "@type": "Answer", "text": "L'eau du réseau est déjà potable. La fontaine la fait passer par quatre cartouches qui retirent particules, chlore, goûts et micro-impuretés, et la colonne ajoute une lampe UV en continu dans le réservoir. Résultat : une eau nette, fraîche et agréable au quotidien." }
+        },
+        {
+          "@type": "Question",
+          "name": "À quel rythme les filtres sont-ils changés ?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Le rythme dépend du nombre de personnes qui boivent l'eau : deux passages par an jusqu'à 5 personnes, quatre passages par an à partir de 6. En location, ces passages sont compris dans la mensualité. À l'achat, ils font l'objet d'un contrat d'entretien dédié." }
+        },
+        {
+          "@type": "Question",
+          "name": "Que se passe-t-il en cas de panne ?",
+          "acceptedAnswer": { "@type": "Answer", "text": "En location, la fontaine est garantie pendant toute la durée du contrat : on intervient, on répare ou on remplace. À l'achat, vous êtes couvert 2 ans sur les pièces et 1 an sur la main-d'œuvre, dans le cadre d'un entretien respecté." }
+        },
+        {
+          "@type": "Question",
+          "name": "Qui établit le devis et la facture ?",
+          "acceptedAnswer": { "@type": "Answer", "text": "UNIK'EAU est la marque fontaines à eau de la société O'ELEC, basée à Baie-Mahault. Vos devis, contrats et factures sont donc établis au nom d'O'ELEC : c'est normal, c'est la même maison." }
+        }
+      ]
+    }
   ]
 }
 </script>
@@ -111,9 +169,9 @@
   <div class="wrap">
     <div class="hero__inner">
       <div class="hero__copy">
-        <p class="eyebrow hero__eyebrow">Guadeloupe · pros &amp; particuliers</p>
+        <p class="eyebrow hero__eyebrow">Guadeloupe · pros et particuliers</p>
         <h1>L'eau illimitée,<br><em>sans bonbonne.</em></h1>
-        <p class="hero__lead">Une fontaine raccordée directement à votre arrivée d'eau. Filtrée en 4 étapes, désinfectée aux UV, servie froide, tempérée ou chaude. Nous l'installons et nous l'entretenons, partout en Guadeloupe.</p>
+        <p class="hero__lead">La fontaine se branche sur votre arrivée d'eau, filtre en quatre étapes et sert une eau froide, tempérée ou chaude, à volonté. Nous l'installons chez vous et nous revenons changer les filtres. Les bonbonnes, c'est terminé.</p>
         <div class="hero__cta">
           <a class="btn btn--wa" href="https://wa.me/590690342476?text=Bonjour%20UNIK'EAU%2C%20j'aimerais%20un%20devis%20pour%20une%20fontaine%20%C3%A0%20eau." target="_blank" rel="noopener">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm5.4 14.1c-.2.7-1.3 1.3-1.9 1.3-.5.1-1.1.1-1.8-.1-.4-.1-1-.3-1.7-.6-2.9-1.3-4.8-4.2-5-4.4-.1-.2-1.2-1.6-1.2-3s.7-2.1 1-2.4c.3-.3.6-.4.8-.4h.6c.2 0 .4 0 .6.5s.8 1.9.8 2c.1.1.1.3 0 .5-.4.9-.9 1-.7 1.4.8 1.3 1.7 2.1 3 2.8.3.2.5.1.7-.1l.9-1.1c.2-.3.4-.2.7-.1l2 1c.3.1.5.2.5.3.1.1.1.7-.3 1.4Z"/></svg>
@@ -132,7 +190,7 @@
         <div class="stage">
           <div class="stage__frame">
             <span class="stage__badge"><i></i>Installée en Guadeloupe</span>
-            <img class="stage__img" src="assets/fontaine-grande.webp" alt="Fontaine à eau colonne UNIK'EAU, grise et noire, avec ses trois leviers de service" width="529" height="1216" fetchpriority="high">
+            <img class="stage__img" src="assets/fontaine-grande.webp" alt="Fontaine à eau sur réseau UNIK'EAU en Guadeloupe, modèle colonne gris et noir avec leviers eau chaude, tempérée et froide" width="529" height="1216" fetchpriority="high">
           </div>
           <span class="tap tap--hot"><i></i><span><b>Eau chaude</b><small>≥ 90 °C</small></span></span>
           <span class="tap tap--cold"><i></i><span><b>Eau froide</b><small>≤ 10 °C</small></span></span>
@@ -211,14 +269,14 @@
     <header class="shead">
       <p class="eyebrow">Deux modèles</p>
       <h2>La colonne ou le comptoir.<br>La même eau.</h2>
-      <p class="shead__lead">Les deux fontaines embarquent exactement les mêmes quatre cartouches de filtration. Le choix se fait sur la place disponible et la taille de l'équipe.</p>
+      <p class="shead__lead">Les deux fontaines embarquent exactement les mêmes quatre cartouches de filtration. Le choix se joue sur la place dont vous disposez, rien d'autre.</p>
     </header>
 
     <div class="models">
       <article class="mcard" data-card>
         <div class="mcard__media">
           <span class="mcard__pin">UNIK-105L-UF · sur pied</span>
-          <img src="assets/fontaine-grande.webp" alt="Fontaine colonne UNIK'EAU grise et noire" width="529" height="1216" loading="lazy" decoding="async">
+          <img src="assets/fontaine-grande.webp" alt="Fontaine à eau colonne UNIK-105L-UF, eau chaude et froide, filtration intégrée et lampe UV" width="529" height="1216" loading="lazy" decoding="async">
         </div>
         <div class="mcard__body">
           <h3>La colonne<small>Réf. UNIK-105L-UF · sur pied · eau froide, tempérée, chaude</small></h3>
@@ -249,7 +307,7 @@
       <article class="mcard" data-card>
         <div class="mcard__media">
           <span class="mcard__pin">Comptoir · à poser</span>
-          <img src="assets/fontaine-petite.webp" alt="Fontaine de comptoir UNIK'EAU anthracite" width="388" height="492" loading="lazy" decoding="async">
+          <img src="assets/fontaine-petite.webp" alt="Fontaine à eau de comptoir UNIK'EAU anthracite, format compact à poser" width="388" height="492" loading="lazy" decoding="async">
         </div>
         <div class="mcard__body">
           <h3>Le comptoir<small>Format compact à poser · eau froide et chaude</small></h3>
@@ -339,11 +397,7 @@
               <div class="uvstage" data-i="4" aria-hidden="true">
                 <span class="uvstage__halo"></span>
                 <span class="uvstage__rays"><i></i><i></i><i></i><i></i><i></i><i></i></span>
-                <span class="uvstage__lamp">
-                  <i class="uvstage__cap uvstage__cap--t"></i>
-                  <i class="uvstage__glass"><i class="uvstage__core"></i></i>
-                  <i class="uvstage__cap uvstage__cap--b"></i>
-                </span>
+                <img class="uvstage__ph" src="assets/lampe-uv.webp" alt="" width="91" height="806" loading="lazy" decoding="async">
               </div>
             </div>
 
@@ -571,7 +625,7 @@
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
           Commerces &amp; accueil du public
         </h3>
-        <p>Salles d'attente, salons, salles de sport, boutiques : proposer de l'eau à vos visiteurs est un geste simple qui change l'expérience sur place.</p>
+        <p>Salles d'attente, salons de coiffure, salles de sport, boutiques : un point d'eau fraîche à disposition change la façon dont on patiente chez vous, surtout en pleine saison chaude.</p>
         <p>La colonne UNIK-105L-UF est conçue pour les espaces recevant du public, avec sa lampe UV qui travaille en continu dans le réservoir.</p>
         <span class="law__ref">Format colonne · conçu pour l'accueil</span>
       </article>
@@ -590,7 +644,7 @@
     <div class="faq">
       <details class="qa">
         <summary>Location ou achat : comment choisir ?</summary>
-        <p>La location est la formule sans souci : une mensualité fixe qui couvre la fontaine, l'installation, l'entretien, les cartouches et la garantie pendant toute la durée du contrat. L'achat convient si vous préférez que la machine vous appartienne : vous payez la fontaine et l'installation une fois, puis l'entretien au contrat. On vous aide à comparer sur WhatsApp selon votre situation.</p>
+        <p>La location est la formule sans souci : une mensualité fixe qui couvre la fontaine, l'installation, l'entretien, les cartouches et la garantie pendant toute la durée du contrat. L'achat convient si vous préférez que la machine vous appartienne : vous payez la fontaine et l'installation une fois, puis l'entretien au contrat. En cas de doute, écrivez-nous sur WhatsApp avec votre situation, on vous dira ce qui revient le moins cher.</p>
       </details>
       <details class="qa">
         <summary>Qu'est-ce qu'il faut prévoir chez moi ?</summary>
@@ -602,7 +656,7 @@
       </details>
       <details class="qa">
         <summary>À quel rythme les filtres sont-ils changés ?</summary>
-        <p>Le rythme dépend du nombre de personnes qui boivent l'eau : tous les 6 mois jusqu'à 4 personnes, tous les trimestres au-delà de 5. En location, ces passages sont compris dans la mensualité. À l'achat, ils font l'objet d'un contrat d'entretien dédié.</p>
+        <p>Le rythme dépend du nombre de personnes qui boivent l'eau : deux passages par an jusqu'à 5 personnes, quatre passages par an à partir de 6. En location, ces passages sont compris dans la mensualité. À l'achat, ils font l'objet d'un contrat d'entretien dédié.</p>
       </details>
       <details class="qa">
         <summary>Que se passe-t-il en cas de panne ?</summary>
@@ -644,7 +698,7 @@
     <div class="footer__grid">
       <div class="footer__brand">
         <img src="assets/logo-unikeau.webp" alt="UNIK'EAU" width="900" height="655" loading="lazy" decoding="async">
-        <p>Fontaines à eau raccordées au réseau. Location, vente, installation et entretien, partout en Guadeloupe.</p>
+        <p>Fontaines à eau raccordées au réseau. Location, vente, installation et entretien dans toute la Guadeloupe, de Baie-Mahault et Jarry à Pointe-à-Pitre, Les Abymes et au-delà.</p>
         <div class="cobrand">
           <svg class="cobrand__logo" width="92" height="26" viewBox="0 0 92 26" role="img" aria-label="O'ELEC">
             <circle cx="12" cy="14" r="8.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-dasharray="42 12" stroke-dashoffset="-24.5" transform="rotate(-90 12 14)"/>
@@ -679,7 +733,7 @@
     </div>
 
     <div class="footer__legal">
-      <p>© <span id="year"></span> O'ELEC, SAS · UNIK'EAU — Tous droits réservés</p>
+      <p>© <span id="year"></span> O'ELEC, SAS · UNIK'EAU · Tous droits réservés</p>
       <p>SIRET 921 001 459 00020 · TVA FR32921001459 · Baie-Mahault, Guadeloupe</p>
     </div>
   </div>
