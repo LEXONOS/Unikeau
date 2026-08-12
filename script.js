@@ -136,42 +136,6 @@
     });
   })();
 
-  /* ---- Fiches modèles : mode focus ---- */
-  (function () {
-    var grid = document.querySelector('.models');
-    if (!grid) return;
-    var cards = Array.prototype.slice.call(grid.querySelectorAll('[data-card]'));
-    function closeAll() {
-      grid.classList.remove('has-open');
-      cards.forEach(function (c) {
-        c.classList.remove('is-open', 'is-dim');
-        var t = c.querySelector('.mcard__toggle');
-        if (t) { t.setAttribute('aria-expanded', 'false'); t.querySelector('span').textContent = 'Caractéristiques'; }
-      });
-    }
-    cards.forEach(function (card) {
-      var toggle = card.querySelector('.mcard__toggle');
-      if (toggle) toggle.addEventListener('click', function (e) {
-        e.stopPropagation();
-        var wasOpen = card.classList.contains('is-open');
-        closeAll();
-        if (!wasOpen) {
-          grid.classList.add('has-open');
-          card.classList.add('is-open');
-          toggle.setAttribute('aria-expanded', 'true');
-          toggle.querySelector('span').textContent = 'Masquer';
-          cards.forEach(function (c) { if (c !== card) c.classList.add('is-dim'); });
-          setTimeout(function () { card.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'nearest' }); }, 60);
-        }
-      });
-      card.addEventListener('click', function () {
-        if (!card.classList.contains('is-dim')) return;
-        var t = card.querySelector('.mcard__toggle');
-        if (t) t.click();
-      });
-    });
-  })();
-
   /* ---- Modèles : sélecteur de coloris ---- */
   Array.prototype.forEach.call(document.querySelectorAll('[data-card]'), function (card) {
     var sws = Array.prototype.slice.call(card.querySelectorAll('.sw'));
@@ -206,7 +170,7 @@
 
   /* ---- Apparition au scroll ---- */
   var targets = document.querySelectorAll(
-    '.hero__copy > *, .hero__visual, .shead, .cpanel, .compare__arrow, .mcard, .realstrip, .step, .seg, .plan, .buynote, .plans__note, .law__card, .qa, .cta'
+    '.shead, .cpanel, .compare__arrow, .mcard, .realstrip, .step, .seg, .plan, .buynote, .plans__note, .law__card, .qa, .cta'
   );
   if (reduced || !('IntersectionObserver' in window)) {
     targets.forEach(function (el) { el.classList.add('in'); });
