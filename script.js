@@ -115,27 +115,6 @@
     if (btns.achat) btns.achat.addEventListener('click', function () { setMode('achat'); });
   })();
 
-  /* ---- Héros : inclinaison de la scène au mouvement de souris ---- */
-  (function () {
-    var frame = document.getElementById('stageTilt');
-    var hero = document.getElementById('top');
-    if (!frame || !hero || reduced) return;
-    if (!window.matchMedia('(pointer: fine)').matches) return;
-    var raf = null, tx = 0, ty = 0;
-    hero.addEventListener('mousemove', function (e) {
-      var r = frame.getBoundingClientRect();
-      tx = ((e.clientX - (r.left + r.width / 2)) / r.width) * 5;
-      ty = ((e.clientY - (r.top + r.height / 2)) / r.height) * -4;
-      if (!raf) raf = requestAnimationFrame(function () {
-        frame.style.transform = 'rotateY(' + tx.toFixed(2) + 'deg) rotateX(' + ty.toFixed(2) + 'deg)';
-        raf = null;
-      });
-    });
-    hero.addEventListener('mouseleave', function () {
-      frame.style.transform = '';
-    });
-  })();
-
   /* ---- Modèles : sélecteur de coloris ---- */
   Array.prototype.forEach.call(document.querySelectorAll('[data-card]'), function (card) {
     var sws = Array.prototype.slice.call(card.querySelectorAll('.sw'));
@@ -170,7 +149,7 @@
 
   /* ---- Apparition au scroll ---- */
   var targets = document.querySelectorAll(
-    '.shead, .cpanel, .compare__arrow, .place, .lifband__card, .mcard, .realstrip, .step, .seg, .plan, .buynote, .plans__note, .law__card, .qa, .cta'
+    '.shead, .stat, .cpanel, .compare__arrow, .place, .lifband__card, .mcard, .realstrip, .step, .seg, .plan, .buynote, .plans__note, .law__card, .qa, .cta'
   );
   if (reduced || !('IntersectionObserver' in window)) {
     targets.forEach(function (el) { el.classList.add('in'); });
