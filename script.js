@@ -149,7 +149,7 @@
 
   /* ---- Apparition au scroll ---- */
   var targets = document.querySelectorAll(
-    '.shead, .stat, .cpanel, .compare__arrow, .place, .lifband__card, .mcard, .realstrip, .step, .seg, .plan, .buynote, .plans__note, .law__card, .qa, .cta'
+    '.shead, .stat, .cpanel, .compare__arrow, .place, .lifband__card, .mcard, .realstrip, .step, .seg, .plan, .buynote, .plans__note, .lterms, .law__card, .qa, .cta'
   );
   if (reduced || !('IntersectionObserver' in window)) {
     targets.forEach(function (el) { el.classList.add('in'); });
