@@ -14,7 +14,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 <style>
-.legalpage{padding:140px 0 90px;min-height:70vh}
+.legalpage{padding:64px 0 90px;min-height:70vh}
 .legalpage .wrap{max-width:840px}
 .legalpage h1{font-family:var(--f-display);font-weight:800;letter-spacing:-.02em;color:var(--ink);font-size:clamp(30px,4.4vw,44px);margin-bottom:10px}
 .legalpage .lead{color:var(--ink-3);font-size:15.5px;margin-bottom:44px;font-family:var(--f-mono)}
@@ -26,17 +26,19 @@
 .legalblock strong{color:var(--ink)}
 .backhome{display:inline-flex;align-items:center;gap:9px;margin-top:34px;font-weight:600;color:var(--blue);text-decoration:none;font-size:15.5px}
 .backhome:hover{text-decoration:underline;text-underline-offset:3px}
-@media (max-width:640px){.legalpage{padding:120px 0 64px}.legalblock{padding:22px 20px}}
+@media (max-width:640px){.legalpage{padding:40px 0 56px}.legalblock{padding:20px 18px}.legalpage h1{font-size:28px}.nav__actions .btn--primary{padding:10px 14px;font-size:13px}}
 </style>
 </head>
 <body>
 
-<header class="nav" id="nav">
-  <div class="wrap nav__in">
-    <a class="nav__logo" href="index.html" aria-label="Retour à l'accueil UNIK'EAU">
+<header class="nav is-stuck" id="nav">
+  <div class="nav__inner">
+    <a class="nav__brand" href="index.html" aria-label="Retour à l'accueil UNIK'EAU">
       <img src="assets/logo-unikeau.webp" alt="UNIK'EAU" width="900" height="655" decoding="async">
     </a>
-    <a class="btn btn--primary" href="index.html">Retour au site</a>
+    <div class="nav__actions">
+      <a class="btn btn--primary" href="index.html">Retour au site</a>
+    </div>
   </div>
 </header>
 
