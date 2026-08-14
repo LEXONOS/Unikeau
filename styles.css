@@ -39,7 +39,7 @@
 
 /* ---------- Base ---------- */
 *,*::before,*::after{box-sizing:border-box}
-html{scroll-behavior:smooth}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 body{
   margin:0;
@@ -1035,6 +1035,8 @@ button{font:inherit;cursor:pointer;background:none;border:0;padding:0;color:inhe
   .cta h2{font-size:26px}
   .cta__lead{font-size:16px}
   .cta__meta{flex-direction:column;gap:8px}
+  .hero__cta{width:100%;flex-direction:column}
+  .hero__cta .btn{width:100%;justify-content:center;white-space:normal;text-align:center}
   .steps{grid-template-columns:1fr 1fr;gap:12px}
   .step{padding:18px 15px}
   .step::before{font-size:10px;padding:4px 9px;margin-bottom:10px}
