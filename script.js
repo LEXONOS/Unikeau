@@ -7,6 +7,12 @@
   var year = document.getElementById('year');
   if (year) year.textContent = new Date().getFullYear();
 
+  /* Vidéo du héros : coupée si l'utilisateur préfère le mouvement réduit */
+  var heroVideo = document.getElementById('heroVideo');
+  if (heroVideo && reduced) {
+    try { heroVideo.removeAttribute('autoplay'); heroVideo.pause(); } catch (e) {}
+  }
+
   var nav = document.getElementById('nav');
   var fab = document.querySelector('.fab');
   var bar = document.getElementById('progressbar');
@@ -149,7 +155,7 @@
 
   /* ---- Apparition au scroll ---- */
   var targets = document.querySelectorAll(
-    '.shead, .stat, .cpanel, .compare__arrow, .place, .lifband__card, .mcard, .realstrip, .step, .seg, .plan, .buynote, .plans__note, .lterms, .law__card, .qa, .cta'
+    '.shead, .stat, .cpanel, .compare__arrow, .place, .lifband__card, .mcard, .realstrip, .step, .seg, .plan, .buynote, .plans__note, .lterms, .law__card, .qa, .cta, .trust__point, .trust__visual'
   );
   if (reduced || !('IntersectionObserver' in window)) {
     targets.forEach(function (el) { el.classList.add('in'); });

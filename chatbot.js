@@ -1,379 +1,448 @@
-/* Assistant IA UNIK'EAU - widget autonome
-   S'insere en bas a droite, au-dessus du bouton WhatsApp.
-   Essaie l'IA via /api/chat (fonction Vercel) ; si indisponible,
-   bascule sur un moteur local de reponses aux questions frequentes. */
+/* =====================================================================
+   UNIK'EAU — Assistant « questions fréquentes »
+   Réponses préenregistrées (pas d'IA en direct). Honnête et simple :
+   on montre les questions qu'on nous pose le plus, on y répond, et pour
+   tout le reste on renvoie vers WhatsApp.
+   ===================================================================== */
 (function () {
   'use strict';
 
-  var WA = "https://wa.me/590690342476?text=Bonjour%20UNIK'EAU%2C%20j'aimerais%20un%20devis%20pour%20une%20fontaine%20%C3%A0%20eau.";
+  var WA_NUM = '590690342476';
+  var WA_TXT = "Bonjour UNIK'EAU, j'aimerais un devis pour une fontaine \u00e0 eau.";
+  var WA_LINK = 'https://wa.me/' + WA_NUM + '?text=' + encodeURIComponent(WA_TXT);
+  var WA_HUMAN = '+590 690 34 24 76';
 
-  /* ---------------- Styles ---------------- */
+  /* ---------------------------------------------------------------
+     Base de questions / réponses (regroupées par thème)
+     --------------------------------------------------------------- */
+  var CATS = ['Tarifs', "L'eau", 'Entretien', 'Installation', 'Le produit', 'Zone & d\u00e9lais', 'Garantie', 'Paiement', 'Contact'];
+
+  var QA = [
+    /* ---- Tarifs ---- */
+    { id: 'loc-achat', cat: 'Tarifs', q: 'Location ou achat, comment choisir ?',
+      a: "La location est la formule sans souci : une mensualit\u00e9 fixe qui couvre la fontaine, l'installation, l'entretien, les cartouches et la garantie pendant tout le contrat.\nL'achat, c'est la machine qui vous appartient : vous payez la fontaine et l'installation une fois, puis l'entretien au contrat.\nDites-nous votre situation sur WhatsApp (" + WA_HUMAN + "), on vous indique ce qui revient le moins cher.",
+      k: ['location', 'achat', 'acheter', 'louer', 'choisir', 'difference', 'formule', 'plutot'] },
+    { id: 'prix-loc', cat: 'Tarifs', q: 'Combien co\u00fbte la location ?',
+      a: "Location tout compris :\n\u2022 50 \u20ac HT/mois (54,25 \u20ac TTC) jusqu'\u00e0 4 personnes\n\u2022 70 \u20ac HT/mois (75,95 \u20ac TTC) \u00e0 partir de 5 personnes\nLe tarif suit le nombre de personnes qui boivent l'eau, pas le mod\u00e8le. Installation, entretien, cartouches et garantie compris. Engagement 24 mois, caution 100 \u20ac.",
+      k: ['prix', 'tarif', 'combien', 'cout', 'coute', 'mensualite', 'mois', 'location', 'louer'] },
+    { id: 'prix-achat', cat: 'Tarifs', q: "Combien co\u00fbte l'achat ?",
+      a: "\u00c0 l'achat :\n\u2022 Comptoir : 699 \u20ac TTC\n\u2022 Colonne : 799 \u20ac TTC\n\u2022 Installation : 200 \u20ac TTC (d\u00e9placement, main-d'\u0153uvre et accessoires compris)\nGarantie 2 ans sur les pi\u00e8ces. L'entretien se fait ensuite via un contrat d\u00e9di\u00e9.",
+      k: ['prix', 'achat', 'acheter', 'combien', 'cout', 'coute', 'comptoir', 'colonne'] },
+    { id: 'inclus-loc', cat: 'Tarifs', q: 'Que comprend la location ?',
+      a: "Tout est compris : la fontaine, l'installation, l'entretien r\u00e9gulier, les 4 cartouches remplac\u00e9es \u00e0 chaque passage, et la garantie pendant toute la dur\u00e9e du contrat. Vous n'avez qu'une mensualit\u00e9 fixe, sans surprise.",
+      k: ['inclus', 'compris', 'comprend', 'contient', 'entretien'] },
+    { id: 'engagement', cat: 'Tarifs', q: 'Engagement et caution ?',
+      a: "En location : engagement de 24 mois et caution de 100 \u20ac \u00e0 la mise en service. En \u00e9change, tout est compris pendant le contrat.",
+      k: ['engagement', 'caution', 'duree', 'contrat', '24'] },
+    { id: 'resiliation', cat: 'Tarifs', q: 'Peut-on r\u00e9silier avant 24 mois ?',
+      a: "La location est pr\u00e9vue pour 24 mois. Une r\u00e9siliation anticip\u00e9e reste possible dans des situations particuli\u00e8res, \u00e9tudi\u00e9es au cas par cas. Expliquez-nous votre situation sur WhatsApp (" + WA_HUMAN + ") et on regarde ensemble.",
+      k: ['resilier', 'resiliation', 'arreter', 'annuler', 'rompre', 'avant', 'stopper'] },
+
+    /* ---- L'eau ---- */
+    { id: 'eau-bonne', cat: "L'eau", q: "L'eau est-elle vraiment bonne \u00e0 boire ?",
+      a: "L'eau de votre r\u00e9seau passe par 4 cartouches (s\u00e9diments, charbon actif, ultrafiltration, post-charbon) qui retirent particules, chlore, go\u00fbts et micro-impuret\u00e9s, puis par une lampe UV qui d\u00e9sinfecte le r\u00e9servoir en continu. R\u00e9sultat : une eau claire et fra\u00eeche, que vous buvez sans y penser.",
+      k: ['bonne', 'boire', 'buvable', 'qualite', 'sante', 'propre', 'saine'] },
+    { id: 'peur-robinet', cat: "L'eau", q: "En Guadeloupe on h\u00e9site \u00e0 boire l'eau du robinet, \u00e7a change quoi ?",
+      a: "C'est justement l'int\u00e9r\u00eat. Beaucoup pr\u00e9f\u00e8rent acheter des bouteilles par pr\u00e9caution. Avec UNIK'EAU, l'eau est filtr\u00e9e en 4 \u00e9tapes puis pass\u00e9e aux UV : vous retrouvez une eau du robinet en laquelle vous avez confiance, \u00e0 volont\u00e9, sans bouteilles ni bonbonnes.",
+      k: ['peur', 'robinet', 'guadeloupe', 'confiance', 'hesite', 'bouteille', 'potable', 'ile'] },
+    { id: 'filtration', cat: "L'eau", q: 'Que retire la filtration ?',
+      a: "Quatre \u00e9tapes :\n\u2022 PP : particules et sable\n\u2022 Charbon actif : chlore et mauvais go\u00fbts\n\u2022 Ultrafiltration : bact\u00e9ries et micro-impuret\u00e9s\n\u2022 Post-charbon : dernier affinage du go\u00fbt\nPuis une lampe UV neutralise les micro-organismes en continu, sans aucun produit ajout\u00e9.",
+      k: ['filtration', 'filtre', 'cartouche', 'retire', 'enleve', 'uv', 'charbon', 'osmose', 'etapes'] },
+    { id: 'chaud-froid', cat: "L'eau", q: 'Eau chaude et froide ?',
+      a: "Oui : froide (\u2264 10 \u00b0C), temp\u00e9r\u00e9e et chaude (\u2265 90 \u00b0C), \u00e0 volont\u00e9, sur les deux mod\u00e8les.",
+      k: ['chaude', 'froide', 'temperature', 'chaud', 'froid', 'tiede', 'temperee'] },
+
+    /* ---- Entretien ---- */
+    { id: 'freq-filtres', cat: 'Entretien', q: '\u00c0 quel rythme change-t-on les filtres ?',
+      a: "Selon le nombre de personnes : 2 passages par an jusqu'\u00e0 4 personnes, 4 passages par an \u00e0 partir de 5. En location, c'est compris. \u00c0 l'achat, c'est un contrat d'entretien d\u00e9di\u00e9.",
+      k: ['rythme', 'frequence', 'changer', 'remplacer', 'filtres', 'cartouches', 'souvent', 'quand'] },
+    { id: 'prix-entretien', cat: 'Entretien', q: "Combien co\u00fbte l'entretien \u00e0 l'achat ?",
+      a: "\u00c0 l'achat, l'entretien annuel :\n\u2022 244 \u20ac TTC/an de 1 \u00e0 4 personnes (un passage tous les 6 mois)\n\u2022 488 \u20ac TTC/an \u00e0 partir de 5 personnes (un passage par trimestre)\nFiltres neufs et d\u00e9placement compris.",
+      k: ['entretien', 'maintenance', 'cout', 'prix', 'annuel', 'contrat'] },
+    { id: 'qui-entretien', cat: 'Entretien', q: "Qui s'occupe de l'entretien ?",
+      a: "Notre technicien se d\u00e9place, remplace les 4 cartouches par des neuves et v\u00e9rifie la fontaine. Vous n'avez rien \u00e0 faire.",
+      k: ['qui', 'technicien', 'entretien', 'occupe', 'deplace'] },
+
+    /* ---- Installation ---- */
+    { id: 'prevoir', cat: 'Installation', q: 'Que faut-il pr\u00e9voir chez moi ?',
+      a: "Juste une arriv\u00e9e d'eau potable et une prise \u00e9lectrique \u00e0 proximit\u00e9 de l'emplacement. Le technicien apporte tout le reste, accessoires de raccordement compris.",
+      k: ['prevoir', 'besoin', 'faut', 'arrivee', 'prise', 'raccordement', 'branchement', 'plomberie'] },
+    { id: 'delai', cat: 'Installation', q: 'Combien de temps pour \u00eatre install\u00e9 ?',
+      a: "En g\u00e9n\u00e9ral, installation dans la semaine, au plus tard sous deux semaines apr\u00e8s validation du devis. Un seul passage suffit.",
+      k: ['delai', 'temps', 'quand', 'rapidite', 'attente', 'semaine', 'installe', 'rendez'] },
+    { id: 'installation', cat: 'Installation', q: "Comment se passe l'installation ?",
+      a: "On raccorde la fontaine \u00e0 votre arriv\u00e9e d'eau, on la met en service et on v\u00e9rifie chaque sortie. Rapide et propre, en un seul rendez-vous.",
+      k: ['installation', 'installer', 'pose', 'passe', 'deroule', 'mise', 'service'] },
+
+    /* ---- Le produit ---- */
+    { id: 'colonne-comptoir', cat: 'Le produit', q: 'Colonne ou comptoir, quelle diff\u00e9rence ?',
+      a: "M\u00eame eau et m\u00eames 4 cartouches dans les deux. La colonne se pose au sol (id\u00e9ale pour accueil, bureaux, salles d'attente), le comptoir se pose sur un plan de travail (quand la place est compt\u00e9e). Le choix se joue sur l'espace, pas sur le prix.",
+      k: ['colonne', 'comptoir', 'difference', 'modele', 'lequel', 'sol', 'poser'] },
+    { id: 'coloris', cat: 'Le produit', q: 'Quels coloris ?',
+      a: "Colonne : gris et noir, ou blanc et noir.\nComptoir : gris et noir, blanc et noir, ou noir complet.",
+      k: ['coloris', 'couleur', 'couleurs', 'noir', 'blanc', 'gris'] },
+    { id: 'dimensions', cat: 'Le produit', q: 'Quelles dimensions ?',
+      a: "La colonne fait 33 x 36 x 116 cm. Pour les dimensions exactes du comptoir, demandez-nous sur WhatsApp (" + WA_HUMAN + "), on vous envoie la fiche.",
+      k: ['dimensions', 'taille', 'hauteur', 'largeur', 'encombrement', 'mesure', 'cm'] },
+    { id: 'bonbonne', cat: 'Le produit', q: 'Faut-il encore des bonbonnes ?',
+      a: "Non, plus jamais. La fontaine se branche sur votre arriv\u00e9e d'eau : plus rien \u00e0 commander, porter ou stocker, et jamais de rupture.",
+      k: ['bonbonne', 'bonbonnes', 'bouteille', 'recharge', 'stock', 'livraison'] },
+
+    /* ---- Zone & délais ---- */
+    { id: 'zone', cat: 'Zone & d\u00e9lais', q: 'Vous intervenez o\u00f9 ?',
+      a: "Dans toute la Guadeloupe : Baie-Mahault, Jarry, Pointe-\u00e0-Pitre, Les Abymes, et au-del\u00e0. Dites-nous votre commune sur WhatsApp (" + WA_HUMAN + "), on confirme tout de suite.",
+      k: ['zone', 'ou', 'secteur', 'commune', 'livrez', 'intervenez', 'deplacez', 'guadeloupe'] },
+    { id: 'pro-particulier', cat: 'Zone & d\u00e9lais', q: 'C\'est pour les pros ou les particuliers ?',
+      a: "Les deux. Bureaux, commerces, salles d'attente, salles de sport, restaurants, et \u00e0 la maison.",
+      k: ['pro', 'professionnel', 'entreprise', 'particulier', 'maison', 'bureau', 'commerce'] },
+
+    /* ---- Garantie ---- */
+    { id: 'panne', cat: 'Garantie', q: 'Que se passe-t-il en cas de panne ?',
+      a: "En location, la fontaine est garantie pendant tout le contrat : on intervient, on r\u00e9pare ou on remplace. \u00c0 l'achat, vous \u00eates couvert 2 ans sur les pi\u00e8ces, dans le cadre d'un entretien respect\u00e9.",
+      k: ['panne', 'garantie', 'casse', 'probleme', 'sav', 'repare', 'reparation', 'dysfonctionnement'] },
+
+    /* ---- Paiement ---- */
+    { id: 'paiement', cat: 'Paiement', q: 'Quels moyens de paiement ?',
+      a: "Carte, virement, esp\u00e8ces et facture. Le devis et la facture sont \u00e9tablis au nom d'O'ELEC, la soci\u00e9t\u00e9 derri\u00e8re la marque UNIK'EAU.",
+      k: ['paiement', 'payer', 'carte', 'virement', 'especes', 'cash', 'cheque', 'facture', 'reglement'] },
+    { id: 'oelec', cat: 'Paiement', q: 'Pourquoi la facture est au nom d\'O\'ELEC ?',
+      a: "UNIK'EAU est la marque fontaines \u00e0 eau de la soci\u00e9t\u00e9 O'ELEC, bas\u00e9e \u00e0 Baie-Mahault. Vos devis, contrats et factures sont donc au nom d'O'ELEC : c'est la m\u00eame maison.",
+      k: ['oelec', 'facture', 'societe', 'entreprise', 'siret', 'nom', 'marque'] },
+
+    /* ---- Contact ---- */
+    { id: 'devis', cat: 'Contact', q: 'Comment obtenir un devis ?',
+      a: "Le plus simple : un message WhatsApp au " + WA_HUMAN + " avec votre commune et la taille de votre \u00e9quipe. R\u00e9ponse rapide avec le bon mod\u00e8le et un devis clair. Par mail : oelec.guadeloupe@gmail.com.",
+      k: ['devis', 'contact', 'joindre', 'appeler', 'commander', 'demander', 'estimation', 'mail'] }
+  ];
+
+  /* Questions mises en avant à l'ouverture */
+  var STARTERS = ['prix-loc', 'peur-robinet', 'delai', 'colonne-comptoir', 'paiement', 'devis'];
+
+  function byId(id) { for (var i = 0; i < QA.length; i++) { if (QA[i].id === id) return QA[i]; } return null; }
+
+  /* Recherche par mots-clés pour la saisie libre */
+  function norm(s) {
+    return (s || '').toLowerCase()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9\s]/g, ' ').replace(/\s+/g, ' ').trim();
+  }
+  function bestMatch(text) {
+    var q = norm(text);
+    if (!q) return null;
+    var words = q.split(' ');
+    var best = null, bestScore = 0;
+    for (var i = 0; i < QA.length; i++) {
+      var score = 0;
+      for (var j = 0; j < QA[i].k.length; j++) {
+        var kw = QA[i].k[j];
+        if (q.indexOf(kw) !== -1) score += 2;
+        else if (words.indexOf(kw) !== -1) score += 2;
+      }
+      if (score > bestScore) { bestScore = score; best = QA[i]; }
+    }
+    return bestScore >= 2 ? best : null;
+  }
+
+  /* ---------------------------------------------------------------
+     Styles
+     --------------------------------------------------------------- */
   var css = `
-  .ukb-launcher{
-    position:fixed;right:20px;bottom:92px;z-index:120;
-    width:58px;height:58px;border-radius:50%;border:0;cursor:pointer;
-    display:grid;place-items:center;color:#fff;
-    background:linear-gradient(135deg,#0C4C99,#1265C3 55%,#2EA7E6);
-    box-shadow:0 14px 30px -8px rgba(18,101,195,.65);
-    transition:transform .25s cubic-bezier(.22,.9,.24,1),box-shadow .25s;
-  }
-  .ukb-launcher:hover{transform:translateY(-3px) scale(1.04);box-shadow:0 20px 40px -10px rgba(18,101,195,.7)}
-  .ukb-launcher::before{
-    content:"";position:absolute;inset:-5px;border-radius:50%;
-    border:2px solid rgba(46,167,230,.45);opacity:0;
-    animation:ukbPulse 2.6s ease-out infinite;
-  }
-  .ukb-launcher .ukb-ic-close{display:none}
-  .ukb-launcher.is-open .ukb-ic-chat{display:none}
-  .ukb-launcher.is-open .ukb-ic-close{display:block}
-  .ukb-launcher.is-open::before{animation:none;opacity:0}
-  .ukb-badge{
-    position:absolute;top:-4px;right:-4px;padding:3px 7px;border-radius:999px;
-    background:#0A1C30;color:#8FD4F5;font:600 9px/1 "IBM Plex Mono",ui-monospace,monospace;
-    letter-spacing:.08em;border:1.5px solid rgba(143,212,245,.5);
-  }
-  @keyframes ukbPulse{0%{transform:scale(.9);opacity:.8}70%{transform:scale(1.28);opacity:0}100%{opacity:0}}
+  .ukb-launcher{position:fixed;right:22px;bottom:22px;z-index:1200;width:62px;height:62px;border:none;border-radius:50%;cursor:pointer;
+    background:linear-gradient(140deg,#2EA7E6,#1265C3);box-shadow:0 16px 34px -10px rgba(18,101,195,.6),0 2px 8px rgba(10,28,48,.25);
+    display:grid;place-items:center;transition:transform .25s ease,box-shadow .25s ease}
+  .ukb-launcher:hover{transform:translateY(-3px) scale(1.03)}
+  .ukb-launcher:active{transform:translateY(-1px) scale(.99)}
+  .ukb-launcher svg{width:28px;height:28px;color:#fff;position:relative;z-index:2}
+  .ukb-launcher::before{content:"";position:absolute;inset:0;border-radius:50%;background:inherit;opacity:.55;animation:ukbPulse 2.6s ease-out infinite}
+  @keyframes ukbPulse{0%{transform:scale(1);opacity:.5}70%{transform:scale(1.5);opacity:0}100%{opacity:0}}
+  .ukb-launcher.is-open{background:#0A1C30}
+  .ukb-launcher.is-open::before{display:none}
 
-  .ukb-panel{
-    position:fixed;right:20px;bottom:162px;z-index:130;
-    width:378px;max-width:calc(100vw - 32px);height:560px;max-height:calc(100vh - 190px);
-    display:flex;flex-direction:column;overflow:hidden;border-radius:24px;
-    background:#F6FAFD;border:1px solid #DCE7F0;
-    box-shadow:0 6px 18px rgba(10,28,48,.12), 0 40px 90px -24px rgba(10,28,48,.4);
-    opacity:0;transform:translateY(18px) scale(.96);transform-origin:100% 100%;
-    pointer-events:none;transition:opacity .28s,transform .28s cubic-bezier(.22,.9,.24,1);
-  }
+  .ukb-panel{position:fixed;right:22px;bottom:96px;z-index:1200;width:380px;max-width:calc(100vw - 28px);height:560px;max-height:calc(100vh - 130px);
+    background:#fff;border-radius:20px;overflow:hidden;display:flex;flex-direction:column;
+    box-shadow:0 40px 90px -30px rgba(10,28,48,.5),0 8px 24px rgba(10,28,48,.16);border:1px solid rgba(10,28,48,.08);
+    opacity:0;transform:translateY(14px) scale(.98);pointer-events:none;transition:opacity .28s ease,transform .28s ease;transform-origin:bottom right}
   .ukb-panel.is-open{opacity:1;transform:none;pointer-events:auto}
 
-  .ukb-head{
-    position:relative;display:flex;align-items:center;gap:12px;padding:16px 16px 14px;color:#fff;
-    background:
-      radial-gradient(300px 140px at 90% -20%, rgba(46,167,230,.5), transparent 70%),
-      linear-gradient(135deg,#0A1C30,#0C4C99 60%,#1265C3);
-  }
-  .ukb-ava{
-    width:40px;height:40px;border-radius:14px;flex:none;display:grid;place-items:center;
-    background:rgba(255,255,255,.14);border:1px solid rgba(143,212,245,.35);
-  }
-  .ukb-head-t{min-width:0}
-  .ukb-head-t b{display:block;font:700 15.5px/1.2 "Sora",system-ui,sans-serif;letter-spacing:-.01em}
-  .ukb-head-t small{display:flex;align-items:center;gap:6px;margin-top:3px;font:500 11px/1 "IBM Plex Mono",ui-monospace,monospace;color:#9CCBEE;letter-spacing:.05em}
-  .ukb-dot{width:7px;height:7px;border-radius:50%;background:#3DDC84;box-shadow:0 0 0 3px rgba(61,220,132,.22)}
-  .ukb-close{
-    margin-left:auto;width:34px;height:34px;border-radius:10px;border:0;cursor:pointer;flex:none;
-    display:grid;place-items:center;color:#CFE6F7;background:rgba(255,255,255,.1);transition:background .2s;
-  }
-  .ukb-close:hover{background:rgba(255,255,255,.2)}
+  .ukb-head{display:flex;align-items:center;gap:12px;padding:15px 16px;color:#fff;
+    background:radial-gradient(120% 160% at 0% 0%,#1E86D6,#0A1C30);}
+  .ukb-ava{width:40px;height:40px;border-radius:12px;flex:none;display:grid;place-items:center;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22)}
+  .ukb-ava svg{width:22px;height:22px;color:#EAF4FB}
+  .ukb-ht{flex:1;min-width:0;line-height:1.2}
+  .ukb-ht b{font-family:'Sora',sans-serif;font-weight:600;font-size:15px;letter-spacing:-.01em;display:block}
+  .ukb-sub{display:flex;align-items:center;gap:6px;font-size:12px;color:#BFE0F5;margin-top:2px}
+  .ukb-dot{width:7px;height:7px;border-radius:50%;background:#46CDEF;box-shadow:0 0 0 3px rgba(70,205,239,.25)}
+  .ukb-x{margin-left:auto;background:rgba(255,255,255,.12);border:none;color:#fff;width:32px;height:32px;border-radius:9px;cursor:pointer;font-size:19px;line-height:1;transition:background .2s}
+  .ukb-x:hover{background:rgba(255,255,255,.22)}
 
-  .ukb-body{flex:1;overflow-y:auto;padding:18px 14px 10px;display:flex;flex-direction:column;gap:10px;scrollbar-width:thin}
-  .ukb-msg{
-    max-width:84%;padding:11px 14px;border-radius:16px;
-    font:400 14px/1.55 "Instrument Sans",system-ui,sans-serif;white-space:pre-line;overflow-wrap:break-word;
-    animation:ukbIn .3s cubic-bezier(.22,.9,.24,1);
-  }
-  .ukb-msg a{color:inherit;text-decoration:underline;text-underline-offset:2px;font-weight:600}
-  .ukb-msg--bot{align-self:flex-start;background:#fff;border:1px solid #DCE7F0;color:#42566E;border-bottom-left-radius:6px;box-shadow:0 2px 8px rgba(10,28,48,.05)}
-  .ukb-msg--user{align-self:flex-end;background:linear-gradient(135deg,#0C4C99,#1265C3);color:#fff;border-bottom-right-radius:6px}
+  .ukb-body{flex:1;overflow-y:auto;padding:16px 15px 8px;background:#F5F9FC;scroll-behavior:smooth}
+  .ukb-body::-webkit-scrollbar{width:7px}.ukb-body::-webkit-scrollbar-thumb{background:#cfe0ee;border-radius:8px}
+
+  .ukb-row{display:flex;margin:0 0 10px;animation:ukbIn .3s ease both}
   @keyframes ukbIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .ukb-row.bot{justify-content:flex-start}
+  .ukb-row.user{justify-content:flex-end}
+  .ukb-msg{max-width:82%;padding:11px 14px;border-radius:16px;font-size:14px;line-height:1.5;white-space:pre-line;word-wrap:break-word}
+  .ukb-row.bot .ukb-msg{background:#fff;color:#16324B;border:1px solid #E4EEF6;border-bottom-left-radius:5px;box-shadow:0 2px 8px rgba(10,28,48,.05)}
+  .ukb-row.user .ukb-msg{background:linear-gradient(135deg,#2EA7E6,#1671CE);color:#fff;border-bottom-right-radius:5px}
+  .ukb-msg a{color:inherit;text-decoration:underline;text-underline-offset:2px;font-weight:600}
+  .ukb-row.bot .ukb-msg a{color:#1265C3}
 
-  .ukb-typing{align-self:flex-start;display:flex;gap:5px;padding:14px 16px;background:#fff;border:1px solid #DCE7F0;border-radius:16px;border-bottom-left-radius:6px}
-  .ukb-typing i{width:7px;height:7px;border-radius:50%;background:#7FA6C4;animation:ukbTy 1.1s ease-in-out infinite}
-  .ukb-typing i:nth-child(2){animation-delay:.15s}
-  .ukb-typing i:nth-child(3){animation-delay:.3s}
-  @keyframes ukbTy{0%,60%,100%{transform:none;opacity:.5}30%{transform:translateY(-5px);opacity:1}}
+  .ukb-chips{display:flex;flex-wrap:wrap;gap:8px;margin:2px 0 14px}
+  .ukb-chip{font-size:13px;color:#0E4C8A;background:#fff;border:1px solid #CFE1F1;border-radius:999px;padding:8px 13px;cursor:pointer;text-align:left;
+    transition:border-color .2s,background .2s,transform .15s;line-height:1.35}
+  .ukb-chip:hover{border-color:#2EA7E6;background:#EAF3FC;transform:translateY(-1px)}
+  .ukb-chip.wa{color:#0B7A45;border-color:#Bfe6cf;background:#F0FBF4;display:inline-flex;align-items:center;gap:7px}
+  .ukb-chip.wa svg{width:15px;height:15px}
+  .ukb-chip.all{color:#3B5568;border-style:dashed}
 
-  .ukb-chips{display:flex;flex-wrap:wrap;gap:7px;padding:2px 2px 6px;animation:ukbIn .35s .1s both}
-  .ukb-chip{
-    border:1px solid #C9DEF2;background:#EAF3FC;color:#0C4C99;cursor:pointer;border-radius:999px;
-    padding:8px 13px;font:600 12.5px/1 "Instrument Sans",system-ui,sans-serif;transition:background .2s,transform .2s;
-  }
-  .ukb-chip:hover{background:#DFEEFA;transform:translateY(-1px)}
+  .ukb-cat{width:100%;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#7C96AC;margin:8px 2px 2px}
 
-  .ukb-foot{padding:10px 12px 12px;background:#fff;border-top:1px solid #E4EDF5}
-  .ukb-form{display:flex;gap:8px}
-  .ukb-input{
-    flex:1;min-width:0;border:1.5px solid #DCE7F0;border-radius:14px;padding:11px 14px;
-    font:400 14px/1.4 "Instrument Sans",system-ui,sans-serif;color:#0A1C30;background:#F6FAFD;outline:0;
-    transition:border-color .2s,background .2s;
-  }
-  .ukb-input:focus{border-color:#2EA7E6;background:#fff}
-  .ukb-send{
-    width:44px;height:44px;flex:none;border:0;border-radius:14px;cursor:pointer;display:grid;place-items:center;color:#fff;
-    background:linear-gradient(135deg,#0C4C99,#1265C3);transition:transform .2s,opacity .2s;
-  }
-  .ukb-send:hover{transform:translateY(-2px)}
-  .ukb-send:disabled{opacity:.45;transform:none;cursor:default}
-  .ukb-note{margin:8px 2px 0;font:400 10.5px/1.4 "IBM Plex Mono",ui-monospace,monospace;color:#7488A0;text-align:center}
+  .ukb-foot{border-top:1px solid #E7EFF6;background:#fff;padding:10px 12px}
+  .ukb-inrow{display:flex;gap:8px;align-items:center}
+  .ukb-inrow input{flex:1;border:1px solid #D6E3EF;border-radius:11px;padding:11px 13px;font-size:14px;font-family:inherit;color:#12324B;outline:none;transition:border-color .2s}
+  .ukb-inrow input:focus{border-color:#2EA7E6;box-shadow:0 0 0 3px rgba(46,167,230,.14)}
+  .ukb-send{flex:none;width:40px;height:40px;border-radius:11px;border:none;cursor:pointer;background:linear-gradient(135deg,#2EA7E6,#1265C3);display:grid;place-items:center;transition:transform .15s,opacity .2s}
+  .ukb-send:hover{transform:translateY(-1px)}.ukb-send:disabled{opacity:.5;cursor:default;transform:none}
+  .ukb-send svg{width:18px;height:18px;color:#fff}
+  .ukb-note{text-align:center;font-size:10.5px;color:#93A6B8;margin-top:7px;letter-spacing:.01em}
 
-  /* Desktop : pile alignee au pixel (bot au-dessus du WhatsApp) */
-  .fab{right:22px !important;bottom:22px !important;width:56px !important;height:56px !important}
-  .ukb-launcher{right:22px;bottom:90px;width:56px;height:56px}
+  .ukb-bar{position:fixed;left:0;right:0;bottom:0;z-index:1150;display:none;align-items:center;gap:10px;padding:10px 14px calc(10px + env(safe-area-inset-bottom,0));
+    background:rgba(255,255,255,.94);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid rgba(10,28,48,.1)}
+  .ukb-bar b{font-family:'Sora',sans-serif;font-size:13.5px;color:#0A1C30;font-weight:600}
+  .ukb-bar small{display:block;font-size:11.5px;color:#5B7086;font-weight:400;margin-top:1px}
+  .ukb-bar .ukb-open{margin-left:auto;border:none;border-radius:11px;padding:10px 16px;font-weight:600;font-size:13.5px;color:#fff;cursor:pointer;background:linear-gradient(135deg,#2EA7E6,#1265C3);font-family:inherit}
+  .ukb-bardrop{width:38px;height:38px;border-radius:11px;flex:none;display:grid;place-items:center;background:linear-gradient(140deg,#2EA7E6,#1265C3)}
+  .ukb-bardrop svg{width:20px;height:20px;color:#fff}
 
-  /* Mobile : plus de pastilles empilees, une barre d'action propre en bas */
-  .ukb-bar{
-    position:fixed;left:0;right:0;bottom:0;z-index:110;display:none;gap:10px;
-    padding:10px 12px calc(10px + env(safe-area-inset-bottom));
-    background:rgba(246,250,253,.92);
-    -webkit-backdrop-filter:blur(16px) saturate(1.4);backdrop-filter:blur(16px) saturate(1.4);
-    border-top:1px solid #DCE7F0;box-shadow:0 -10px 30px -12px rgba(10,28,48,.18);
-    transition:transform .3s cubic-bezier(.22,.9,.24,1);
-  }
-  body.ukb-open .ukb-bar{transform:translateY(110%)}
-  .ukb-bar a,.ukb-bar button{
-    flex:1;display:flex;align-items:center;justify-content:center;gap:8px;
-    min-height:48px;padding:10px 8px;border:0;border-radius:14px;cursor:pointer;
-    font:700 14px/1.1 "Sora",system-ui,sans-serif;letter-spacing:-.01em;color:#fff;text-decoration:none;
-  }
-  .ukb-bar .ukb-bar-wa{background:linear-gradient(135deg,#27B45E,#128C46);box-shadow:0 8px 20px -8px rgba(24,150,74,.55)}
-  .ukb-bar .ukb-bar-ai{background:linear-gradient(135deg,#0C4C99,#1265C3 60%,#2EA7E6);box-shadow:0 8px 20px -8px rgba(18,101,195,.55);position:relative}
-  .ukb-bar .ukb-bar-ai .ukb-badge{position:static;margin-left:2px;background:rgba(10,28,48,.4);border-color:rgba(143,212,245,.4)}
-  .ukb-bar svg{flex:none}
-
-  @media (max-width:640px){
-    body{padding-bottom:calc(70px + env(safe-area-inset-bottom))}
-    .fab{display:none !important}
+  @media (max-width:600px){
     .ukb-launcher{display:none}
     .ukb-bar{display:flex}
-    .ukb-panel{
-      right:10px;left:10px;width:auto;border-radius:20px;max-height:none;
-      top:max(10px, env(safe-area-inset-top));bottom:calc(10px + env(safe-area-inset-bottom));height:auto;
-    }
+    .ukb-panel{right:0;left:0;bottom:0;width:100%;max-width:100%;height:88vh;max-height:88vh;border-radius:20px 20px 0 0}
   }
   @media (prefers-reduced-motion:reduce){
     .ukb-launcher::before{animation:none}
-    .ukb-msg,.ukb-chips{animation:none}
-    .ukb-panel{transition:opacity .2s}
+    .ukb-row,.ukb-panel{animation:none;transition:none}
   }`;
 
-  /* ---------------- Moteur local (secours sans cle API) ---------------- */
-  function norm(s) {
-    return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-  }
-  var WA_LINE = "\nDevis rapide sur WhatsApp : +590 690 34 24 76.";
-  var LOCAL = [
-    { k: ['prix', 'tarif', 'combien', 'cout', 'coute', 'location', 'louer', 'mensualite', 'abonnement'],
-      r: "Deux formules :\n- Location tout compris : 50 \u20AC HT/mois (54,25 \u20AC TTC) jusqu'a 4 personnes, ou 70 \u20AC HT/mois (75,95 \u20AC TTC) a partir de 5 personnes. Installation, entretien, cartouches et garantie compris. Engagement 24 mois, caution 100 \u20AC.\n- Achat : 699 \u20AC TTC (comptoir) ou 799 \u20AC TTC (colonne), + 200 \u20AC d'installation obligatoire." + WA_LINE },
-    { k: ['achat', 'acheter', '699', '799'],
-      r: "A l'achat : 699 \u20AC TTC pour la fontaine de comptoir, 799 \u20AC TTC pour la colonne, + 200 \u20AC TTC d'installation obligatoire (deplacement, main-d'\u0153uvre et accessoires compris). Garantie 2 ans sur les pieces." + WA_LINE },
-    { k: ['caution', 'engagement', 'contrat', 'duree', 'resilier', 'resiliation'],
-      r: "La location s'accompagne d'un engagement de 24 mois, avec une caution de 100 \u20AC a la mise en service. En echange, tout est compris pendant le contrat : installation, entretien, cartouches et garantie." + WA_LINE },
-    { k: ['entretien', 'filtre', 'cartouche', 'maintenance', 'changer', 'remplace'],
-      r: "L'eau passe par 4 cartouches (sediments, charbon actif, ultrafiltration, post-charbon) plus une lampe UV. Elles sont remplacees par notre technicien : 2 passages/an jusqu'a 4 personnes, 4 passages/an a partir de 5. En location c'est compris ; a l'achat, le contrat d'entretien coute 244 ou 488 \u20AC TTC/an selon l'equipe." },
-    { k: ['garantie', 'panne', 'casse', 'sav', 'repare'],
-      r: "En location, la fontaine est garantie pendant toute la duree du contrat : on intervient, on repare ou on remplace. A l'achat, vous etes couvert 2 ans sur les pieces, dans le cadre d'un entretien respecte." + WA_LINE },
-    { k: ['installation', 'installer', 'brancher', 'branchement', 'prevoir', 'travaux', 'raccord'],
-      r: "Il vous faut juste une arrivee d'eau potable et une prise electrique a proximite. Notre technicien apporte tout le reste, accessoires de raccordement compris, et met la fontaine en service." + WA_LINE },
-    { k: ['eau', 'chaude', 'froide', 'temperee', 'potable', 'gout', 'qualite', 'uv'],
-      r: "La fontaine sert une eau froide, temperee ou chaude, a volonte. L'eau du reseau est deja potable : la filtration en 4 etapes retire particules, chlore, gouts et micro-impuretes, et la lampe UV desinfecte le reservoir en continu." },
-    { k: ['modele', 'colonne', 'comptoir', 'format', 'couleur', 'coloris', 'taille', 'difference'],
-      r: "Deux formats, meme eau et memes filtres : la colonne (au sol, ideale pour l'accueil) en gris et noir ou blanc et noir, et le comptoir (compact, a poser) en gris et noir ou noir complet. Le tarif de location est le meme, il depend juste du nombre de personnes." },
-    { k: ['zone', 'secteur', 'deplace', 'ou', 'commune', 'ville', 'abymes', 'pointe', 'jarry', 'baie-mahault', 'basse-terre', 'grande-terre', 'gosier', 'moule'],
-      r: "Nous intervenons dans toute la Guadeloupe : Baie-Mahault, Jarry, Pointe-a-Pitre, Les Abymes, et au-dela. Indiquez votre commune sur WhatsApp et on vous confirme tout de suite : +590 690 34 24 76." },
-    { k: ['bonbonne', 'bidon', 'bouteille'],
-      r: "C'est justement l'idee : la fontaine se branche sur votre arrivee d'eau. Plus de bonbonnes a commander, porter ou stocker, et plus jamais de rupture. Eau illimitee, froide, temperee ou chaude." },
-    { k: ['devis', 'contact', 'whatsapp', 'telephone', 'appeler', 'mail', 'email', 'rendez-vous', 'rdv'],
-      r: "Le plus simple : un message WhatsApp au +590 690 34 24 76 avec votre commune et la taille de votre equipe. Reponse rapide avec le bon modele et un devis clair. Par mail : oelec.guadeloupe@gmail.com." },
-    { k: ['bonjour', 'bonsoir', 'salut', 'hello', 'coucou', 'merci'],
-      r: "Bonjour ! Je suis l'assistant UNIK'EAU. Posez-moi vos questions sur les fontaines, les tarifs, l'entretien ou l'installation." }
-  ];
-  function localReply(text) {
-    var t = norm(text), best = null, score = 0;
-    LOCAL.forEach(function (item) {
-      var s = 0;
-      item.k.forEach(function (kw) { if (t.indexOf(kw) !== -1) s++; });
-      if (s > score) { score = s; best = item; }
-    });
-    if (best) return best.r;
-    return "Bonne question ! Pour une reponse precise, le plus simple est de nous ecrire sur WhatsApp au +590 690 34 24 76 : on vous repond rapidement. En attendant, je peux vous renseigner sur les tarifs, l'entretien, l'installation ou les modeles.";
-  }
-
-  /* ---------------- Construction du widget ---------------- */
   var style = document.createElement('style');
   style.textContent = css;
   document.head.appendChild(style);
 
-  var ICONS = {
-    chat: '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/><path d="M9.5 9.5c.3-1.2 1.4-2 2.7-2 1.5 0 2.8 1.1 2.8 2.5 0 1.7-2.2 1.9-2.8 3.2"/><circle cx="12.1" cy="16.5" r=".5" fill="currentColor"/></svg>',
-    close: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>',
-    drop: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#8FD4F5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.7 6.6 9.8a6.6 6.6 0 1 0 10.8 0Z"/><path d="M9.4 13.2a3 3 0 0 0 1.4 2.6" opacity=".7"/></svg>',
-    send: '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>'
-  };
+  /* ---------------------------------------------------------------
+     Icônes
+     --------------------------------------------------------------- */
+  var DROP = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3s6 6.6 6 11a6 6 0 0 1-12 0c0-4.4 6-11 6-11z"/><path d="M9.5 14a2.5 2.5 0 0 0 2.5 2.2" opacity=".7"/></svg>';
+  var WA_ICON = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm5.4 14.1c-.2.7-1.3 1.3-1.9 1.3-.5.1-1.1.1-1.8-.1-.4-.1-1-.3-1.7-.6-2.9-1.3-4.8-4.2-5-4.4-.1-.2-1.2-1.6-1.2-3s.7-2.1 1-2.4c.3-.3.6-.4.8-.4h.6c.2 0 .4 0 .6.5s.8 1.9.8 2c.1.1.1.3 0 .5-.4.9-.9 1-.7 1.4.8 1.3 1.7 2.1 3 2.8.3.2.5.1.7-.1l.9-1.1c.2-.3.4-.2.7-.1l2 1c.3.1.5.2.5.3.1.1.1.7-.3 1.4Z"/></svg>';
 
+  /* ---------------------------------------------------------------
+     Construction du widget
+     --------------------------------------------------------------- */
   var launcher = document.createElement('button');
   launcher.className = 'ukb-launcher';
   launcher.setAttribute('aria-label', "Ouvrir l'assistant UNIK'EAU");
-  launcher.setAttribute('aria-expanded', 'false');
-  launcher.innerHTML = '<span class="ukb-ic-chat">' + ICONS.chat + '</span><span class="ukb-ic-close">' + ICONS.close + '</span><span class="ukb-badge">IA</span>';
+  launcher.innerHTML = DROP;
 
-  var panel = document.createElement('section');
+  var bar = document.createElement('div');
+  bar.className = 'ukb-bar';
+  bar.innerHTML =
+    '<span class="ukb-bardrop">' + DROP + '</span>' +
+    '<div><b>Une question&nbsp;?</b><small>R\u00e9ponses aux questions fr\u00e9quentes</small></div>' +
+    '<button class="ukb-open" type="button">Ouvrir</button>';
+
+  var panel = document.createElement('div');
   panel.className = 'ukb-panel';
   panel.setAttribute('role', 'dialog');
   panel.setAttribute('aria-label', "Assistant UNIK'EAU");
   panel.innerHTML =
     '<div class="ukb-head">' +
-      '<span class="ukb-ava">' + ICONS.drop + '</span>' +
-      '<div class="ukb-head-t"><b>Assistant UNIK\u2019EAU</b><small><span class="ukb-dot"></span>En ligne \u00B7 r\u00E9pond en direct</small></div>' +
-      '<button class="ukb-close" type="button" aria-label="Fermer">' + ICONS.close + '</button>' +
+      '<span class="ukb-ava">' + DROP + '</span>' +
+      '<div class="ukb-ht"><b>Assistant UNIK\'EAU</b>' +
+        '<span class="ukb-sub"><span class="ukb-dot"></span>Questions fr\u00e9quentes</span></div>' +
+      '<button class="ukb-x" type="button" aria-label="Fermer">\u00d7</button>' +
     '</div>' +
-    '<div class="ukb-body"></div>' +
+    '<div class="ukb-body" id="ukbBody"></div>' +
     '<div class="ukb-foot">' +
-      '<form class="ukb-form">' +
-        '<input class="ukb-input" type="text" placeholder="Votre question\u2026" autocomplete="off" maxlength="500" aria-label="Votre question">' +
-        '<button class="ukb-send" type="submit" aria-label="Envoyer">' + ICONS.send + '</button>' +
-      '</form>' +
-      '<p class="ukb-note">Assistant automatique \u00B7 devis exact sur WhatsApp</p>' +
+      '<div class="ukb-inrow">' +
+        '<input id="ukbInput" type="text" autocomplete="off" placeholder="\u00c9crivez votre question\u2026" aria-label="\u00c9crivez votre question">' +
+        '<button class="ukb-send" id="ukbSend" type="button" aria-label="Envoyer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/></svg></button>' +
+      '</div>' +
+      '<div class="ukb-note">R\u00e9ponses pr\u00e9enregistr\u00e9es \u00b7 pour un devis, WhatsApp</div>' +
     '</div>';
 
-  var bar = document.createElement('div');
-  bar.className = 'ukb-bar';
-  bar.innerHTML =
-    '<a class="ukb-bar-wa" href="' + WA + '" target="_blank" rel="noopener">' +
-      '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm5.4 14.1c-.2.7-1.3 1.3-1.9 1.3-.5.1-1.1.1-1.8-.1-.4-.1-1-.3-1.7-.6-2.9-1.3-4.8-4.2-5-4.4-.1-.2-1.2-1.6-1.2-3s.7-2.1 1-2.4c.3-.3.6-.4.8-.4h.6c.2 0 .4 0 .6.5s.8 1.9.8 2c.1.1.1.3 0 .5-.4.9-.9 1-.7 1.4.8 1.3 1.7 2.1 3 2.8.3.2.5.1.7-.1l.9-1.1c.2-.3.4-.2.7-.1l2 1c.3.1.5.2.5.3.1.1.1.7-.3 1.4Z"/></svg>' +
-      'Devis WhatsApp</a>' +
-    '<button class="ukb-bar-ai" type="button">' + ICONS.chat.replace('width="26" height="26"', 'width="18" height="18"') +
-      'Une question ?<span class="ukb-badge">IA</span></button>';
-
   document.body.appendChild(launcher);
-  document.body.appendChild(panel);
   document.body.appendChild(bar);
+  document.body.appendChild(panel);
 
-  var body = panel.querySelector('.ukb-body');
-  var form = panel.querySelector('.ukb-form');
-  var input = panel.querySelector('.ukb-input');
-  var send = panel.querySelector('.ukb-send');
+  var body = panel.querySelector('#ukbBody');
+  var input = panel.querySelector('#ukbInput');
+  var sendBtn = panel.querySelector('#ukbSend');
+  var greeted = false;
 
-  var history = [];   // {role, content}
-  var busy = false;
-  var apiDown = false;
-  var started = false;
+  /* ---------------------------------------------------------------
+     Rendu des messages et des chips
+     --------------------------------------------------------------- */
+  function linkify(text) {
+    var esc = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    // numéro WhatsApp cliquable
+    esc = esc.replace(/\+590 690 34 24 76/g, '<a href="' + WA_LINK + '" target="_blank" rel="noopener">+590 690 34 24 76</a>');
+    // e-mail cliquable
+    esc = esc.replace(/oelec\.guadeloupe@gmail\.com/g, '<a href="mailto:oelec.guadeloupe@gmail.com">oelec.guadeloupe@gmail.com</a>');
+    return esc;
+  }
+  function scrollDown() { body.scrollTop = body.scrollHeight; }
 
-  function scroll() { body.scrollTop = body.scrollHeight; }
-
-  function addMsg(role, text) {
-    var el = document.createElement('div');
-    el.className = 'ukb-msg ' + (role === 'user' ? 'ukb-msg--user' : 'ukb-msg--bot');
-    // Liens cliquables sur le numero WhatsApp
-    if (role !== 'user' && text.indexOf('+590 690 34 24 76') !== -1) {
-      el.innerHTML = text
-        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-        .replace(/\+590 690 34 24 76/g, '<a href="' + WA + '" target="_blank" rel="noopener">+590 690 34 24 76</a>');
-    } else {
-      el.textContent = text;
-    }
-    body.appendChild(el);
-    scroll();
+  function addMsg(who, text) {
+    var row = document.createElement('div');
+    row.className = 'ukb-row ' + who;
+    row.innerHTML = '<div class="ukb-msg">' + linkify(text) + '</div>';
+    body.appendChild(row);
+    scrollDown();
   }
 
-  function showTyping() {
-    var t = document.createElement('div');
-    t.className = 'ukb-typing';
-    t.innerHTML = '<i></i><i></i><i></i>';
-    body.appendChild(t);
-    scroll();
-    return t;
+  function clearChips() {
+    var old = body.querySelectorAll('.ukb-chips');
+    for (var i = 0; i < old.length; i++) old[i].parentNode.removeChild(old[i]);
   }
 
-  function showChips() {
+  function waChip(wrap) {
+    var a = document.createElement('a');
+    a.className = 'ukb-chip wa';
+    a.href = WA_LINK; a.target = '_blank'; a.rel = 'noopener';
+    a.innerHTML = WA_ICON + 'Demander un devis';
+    wrap.appendChild(a);
+  }
+
+  function questionChip(wrap, item) {
+    var b = document.createElement('button');
+    b.className = 'ukb-chip'; b.type = 'button';
+    b.textContent = item.q;
+    b.addEventListener('click', function () { answer(item); });
+    wrap.appendChild(b);
+  }
+
+  function allChip(wrap) {
+    var b = document.createElement('button');
+    b.className = 'ukb-chip all'; b.type = 'button';
+    b.textContent = 'Toutes les questions';
+    b.addEventListener('click', showAll);
+    wrap.appendChild(b);
+  }
+
+  /* Chips de départ (questions les plus fréquentes) */
+  function showStarters() {
+    clearChips();
     var wrap = document.createElement('div');
     wrap.className = 'ukb-chips';
-    ['Les tarifs ?', "L'entretien, comment \u00E7a marche ?", 'Que faut-il pr\u00E9voir chez moi ?', 'Location ou achat ?'].forEach(function (q) {
-      var b = document.createElement('button');
-      b.type = 'button';
-      b.className = 'ukb-chip';
-      b.textContent = q;
-      b.addEventListener('click', function () {
-        wrap.remove();
-        submit(q);
-      });
-      wrap.appendChild(b);
-    });
-    body.appendChild(wrap);
-    scroll();
-  }
-
-  function welcome() {
-    if (started) return;
-    started = true;
-    addMsg('bot', "Bonjour ! Je suis l'assistant UNIK\u2019EAU. Tarifs, entretien, installation, mod\u00E8les\u2026 posez-moi vos questions.");
-    showChips();
-  }
-
-  function reply(text) {
-    var q = history.slice(); // copie avec le dernier message user inclus
-    var typing = showTyping();
-    var min = new Promise(function (r) { setTimeout(r, 500); }); // petite latence naturelle
-
-    var answer;
-    if (apiDown) {
-      answer = Promise.resolve(localReply(text));
-    } else {
-      answer = fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: q })
-      }).then(function (r) {
-        if (!r.ok) throw new Error('api');
-        return r.json();
-      }).then(function (d) {
-        if (!d || !d.reply) throw new Error('api');
-        return d.reply;
-      }).catch(function () {
-        apiDown = true;
-        return localReply(text);
-      });
+    for (var i = 0; i < STARTERS.length; i++) {
+      var it = byId(STARTERS[i]);
+      if (it) questionChip(wrap, it);
     }
-
-    Promise.all([answer, min]).then(function (res) {
-      typing.remove();
-      var out = res[0];
-      addMsg('bot', out);
-      history.push({ role: 'assistant', content: out });
-      if (history.length > 16) history = history.slice(-16);
-      busy = false;
-      send.disabled = false;
-      input.focus();
-    });
+    allChip(wrap);
+    body.appendChild(wrap);
+    scrollDown();
   }
 
-  function submit(text) {
-    text = (text || '').trim();
-    if (!text || busy) return;
-    busy = true;
-    send.disabled = true;
+  /* Liste complète, regroupée par thème */
+  function showAll() {
+    clearChips();
+    addMsg('bot', 'Voici toutes les questions, par th\u00e8me :');
+    var wrap = document.createElement('div');
+    wrap.className = 'ukb-chips';
+    for (var c = 0; c < CATS.length; c++) {
+      var cat = CATS[c];
+      var items = QA.filter(function (x) { return x.cat === cat; });
+      if (!items.length) continue;
+      var lab = document.createElement('div');
+      lab.className = 'ukb-cat'; lab.textContent = cat;
+      wrap.appendChild(lab);
+      for (var i = 0; i < items.length; i++) questionChip(wrap, items[i]);
+    }
+    body.appendChild(wrap);
+    scrollDown();
+  }
+
+  /* Réponse à une question connue + chips liées */
+  function answer(item) {
+    clearChips();
+    addMsg('user', item.q);
+    setTimeout(function () {
+      addMsg('bot', item.a);
+      var wrap = document.createElement('div');
+      wrap.className = 'ukb-chips';
+      var related = QA.filter(function (x) { return x.cat === item.cat && x.id !== item.id; }).slice(0, 3);
+      for (var i = 0; i < related.length; i++) questionChip(wrap, related[i]);
+      waChip(wrap);
+      allChip(wrap);
+      body.appendChild(wrap);
+      scrollDown();
+    }, 180);
+  }
+
+  /* Saisie libre */
+  function handleFree(text) {
+    clearChips();
     addMsg('user', text);
-    history.push({ role: 'user', content: text });
-    reply(text);
+    var hit = bestMatch(text);
+    setTimeout(function () {
+      if (hit) {
+        addMsg('bot', hit.a);
+        var wrap = document.createElement('div');
+        wrap.className = 'ukb-chips';
+        var related = QA.filter(function (x) { return x.cat === hit.cat && x.id !== hit.id; }).slice(0, 2);
+        for (var i = 0; i < related.length; i++) questionChip(wrap, related[i]);
+        waChip(wrap); allChip(wrap);
+        body.appendChild(wrap);
+        scrollDown();
+      } else {
+        addMsg('bot', "Je n'ai pas de r\u00e9ponse pr\u00e9enregistr\u00e9e \u00e0 cette question pr\u00e9cise. Le mieux, c'est d'\u00e9crire directement sur WhatsApp au " + WA_HUMAN + " : on vous r\u00e9pond rapidement.\nVous pouvez aussi choisir une question ci-dessous.");
+        var wrap2 = document.createElement('div');
+        wrap2.className = 'ukb-chips';
+        waChip(wrap2); allChip(wrap2);
+        body.appendChild(wrap2);
+        scrollDown();
+      }
+    }, 180);
   }
 
+  function greet() {
+    if (greeted) return;
+    greeted = true;
+    addMsg('bot', "Bonjour \ud83d\udc4b Voici les questions qu'on nous pose le plus souvent. Choisissez, ou \u00e9crivez la v\u00f4tre.");
+    showStarters();
+  }
+
+  /* ---------------------------------------------------------------
+     Ouverture / fermeture
+     --------------------------------------------------------------- */
+  var isOpen = false;
   function openPanel() {
-    document.body.classList.add('ukb-open');
+    isOpen = true;
     panel.classList.add('is-open');
     launcher.classList.add('is-open');
-    launcher.setAttribute('aria-expanded', 'true');
-    launcher.setAttribute('aria-label', "Fermer l'assistant UNIK'EAU");
-    welcome();
-    setTimeout(function () { input.focus(); }, 250);
+    launcher.setAttribute('aria-label', "Fermer l'assistant");
+    greet();
+    setTimeout(function () { if (window.innerWidth > 600) input.focus(); }, 260);
   }
   function closePanel() {
-    document.body.classList.remove('ukb-open');
+    isOpen = false;
     panel.classList.remove('is-open');
     launcher.classList.remove('is-open');
-    launcher.setAttribute('aria-expanded', 'false');
     launcher.setAttribute('aria-label', "Ouvrir l'assistant UNIK'EAU");
   }
+  function toggle() { isOpen ? closePanel() : openPanel(); }
 
-  launcher.addEventListener('click', function () {
-    if (panel.classList.contains('is-open')) closePanel(); else openPanel();
-  });
-  panel.querySelector('.ukb-close').addEventListener('click', closePanel);
-  bar.querySelector('.ukb-bar-ai').addEventListener('click', openPanel);
-  document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape' && panel.classList.contains('is-open')) closePanel();
-  });
-  form.addEventListener('submit', function (e) {
-    e.preventDefault();
-    var v = input.value;
+  launcher.addEventListener('click', toggle);
+  bar.querySelector('.ukb-open').addEventListener('click', openPanel);
+  panel.querySelector('.ukb-x').addEventListener('click', closePanel);
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && isOpen) closePanel(); });
+
+  function submit() {
+    var v = input.value.trim();
+    if (!v) return;
     input.value = '';
-    submit(v);
-  });
+    handleFree(v);
+  }
+  sendBtn.addEventListener('click', submit);
+  input.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); submit(); } });
 })();
