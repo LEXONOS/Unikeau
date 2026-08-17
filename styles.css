@@ -242,8 +242,8 @@ button{font:inherit;cursor:pointer;background:none;border:0;padding:0;color:inhe
 .hero__media::after{
   content:"";position:absolute;inset:0;z-index:3;
   background:linear-gradient(90deg,
-    rgba(242,247,251,.97) 0%, rgba(242,247,251,.9) 30%,
-    rgba(242,247,251,.5) 52%, rgba(242,247,251,.06) 76%, rgba(242,247,251,0) 100%);
+    rgba(242,247,251,.98) 0%, rgba(242,247,251,.95) 26%,
+    rgba(242,247,251,.6) 42%, rgba(242,247,251,.12) 60%, rgba(242,247,251,0) 78%);
 }
 .hero__media .stage__badge{left:auto;right:26px;top:24px;z-index:5}
 .hero__media .tap{z-index:5}
