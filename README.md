@@ -1,25 +1,45 @@
-# UNIK'EAU — fontaine-guadeloupe.fr (v3 « Eau vive »)
+# UNIK'EAU - Fontaine Guadeloupe
 
-Site vitrine one-page statique. Aucune dépendance à installer : HTML + CSS + JS.
+Site vitrine une page (formule Essentiel) pour UNIK'EAU, marque commerciale d'O'ELEC.
+Fontaines a eau raccordees au reseau en Guadeloupe.
 
-## Contenu
-- `index.html` — la page
-- `styles.css` — design system « Eau vive » (voir `charte.html`)
-- `script.js` — interactions (scrollytelling filtration, bascule tarifs Location/Achat, menu, FAQ)
-- `assets/` — photos, logo, favicons, modèles 3D (`assets/3d`), moteur `model-viewer` local (`assets/vendor`), fiche technique PDF
-- `charte.html` — charte graphique (non indexée)
-- `robots.txt`, `sitemap.xml`, `vercel.json`
+Code 100 % natif : HTML5, CSS3, JavaScript vanilla. Aucun framework, aucune etape
+de build. Le site fonctionne en ouvrant `index.html` et se deploie tel quel sur un
+hebergement mutualise OVH comme sur Vercel.
 
-## Avant mise en ligne
-Chercher `A-MODIFIER` dans `index.html` : il reste les 2 vraies adresses e-mail à remplacer
-(placeholder actuel : contact@fontaine-guadeloupe.fr).
+## Structure
 
-## Déployer (GitHub + Vercel)
-1. Pousser ce dossier tel quel dans le repo GitHub.
-2. Vercel détecte un site statique : aucun réglage, `vercel.json` gère les en-têtes.
-3. Rattacher le domaine fontaine-guadeloupe.fr (OVH) dans les réglages du projet Vercel.
+```
+index.html            Page principale (landing de conversion)
+mentions-legales.html Page mentions legales
+css/style.css         Feuille de style unique
+js/main.js            Interactions (menu, tarifs, apparition au scroll)
+assets/               Logo (favicon), image de partage Open Graph
+img/                  Photos du client (voir img/README.txt)
+```
 
-## Tarifs affichés (source : devis O'ELEC D-2026-016, TVA 8,5 %)
-- Location : comptoir 50 € TTC/mois, colonne 70 € TTC/mois, entretien compris, garantie pendant le contrat
-- Achat : comptoir 699 € TTC, colonne 799 € TTC, + 200 € TTC d'installation
-- Entretien à l'achat : 244 € TTC/an (1 à 4 pers., semestriel) ou 488 € TTC/an (5+, trimestriel)
+## Ce qui reste a completer
+
+Le site est complet et deployable. Trois elements sont marques dans le code
+et a fournir par le client :
+
+- **Photos** : blocs `IMAGE A FOURNIR`. Voir `img/README.txt` pour les noms de fichiers exacts.
+- **Temoignages** : blocs `[A COMPLETER]` dans la section "Pourquoi UNIK'EAU". A remplacer par de vrais avis clients (aucun temoignage invente).
+- **Dimensions du modele comptoir** : indiquees "sur demande" (jamais communiquees).
+
+## Mise en ligne sur OVH (FileZilla)
+
+1. Se connecter en FTP a l'hebergement OVH.
+2. Ouvrir le dossier racine web (`www`).
+3. Deposer le CONTENU de ce dossier (index.html, mentions-legales.html, css/, js/, assets/, img/) directement dans `www`, pour obtenir `www/index.html` a la racine.
+4. Le fichier `README.md` n'a pas besoin d'etre mis en ligne.
+5. Verifier que le nom de domaine (fontaine-guadeloupe.fr) pointe bien sur l'hebergement.
+
+## Mise en ligne sur Vercel (alternative)
+
+Pousser ce dossier sur un depot GitHub, puis importer le depot dans Vercel.
+Aucune configuration : projet statique, deploiement automatique.
+
+---
+
+Realisation Novalem.
